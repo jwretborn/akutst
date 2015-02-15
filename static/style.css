@@ -1,0 +1,11 @@
+
+#wrapper {
+	margin: 0 auto;
+	padding: 0 20px;
+	width: 960px;
+	position: relative;
+}
+
+#content {
+	background-color: none;
+}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>EM Procedures</h1>
+    <form name="procedures" action="procedure" method="POST">
+    	<label for="id">ID:</label>
+    	<input type="user_id" name="user_id" />
+    	<br />
+    	<label for="procedure">Procedure:</label>
+    	<select name="procedure">
+    		<option></option>
+    		<option value="1">Blood gas</option>
+    		<option value="2">Lumbare puncture</option>
+    	</select>
+    	<br />
+    	<label for="date">Date</label>
+    	<input type="date" name="date" value="{{ date_today }}" />
+    	<br />
+    	<label for="successful">Successful</label>
+    	<br />
+    	<input type="radio" name="successful" value="1">Yes<br />
+    	<input type="radio" name="successful" value="0">No<br />
+    	<br />
+    	<label for="attempts">Number of attempts</label>
+    	<br />
+    	<input type="radio" name="attempts" value="1">1
+    	<input type="radio" name="attempts" value="2">2
+	   	<input type="radio" name="attempts" value="3">3
+    	<input type="radio" name="attempts" value="4">4
+    	<input type="radio" name="attempts" value="5">5
+    	<br />
+    	<input type="submit" value="Submit">
+    </form>
+{% endblock %}
