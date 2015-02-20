@@ -35,7 +35,7 @@ def procedure():
 		db.session.add(p)
 		db.session.commit()
 
-		return request.form['user_id']
+		return redirect(url_for('index'))
 	else:
 		return redirect(url_for('index'))
 

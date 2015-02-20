@@ -2,12 +2,14 @@
 <html>
     <head>
         {% block head %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.2-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %} - My Webpage</title>
         {% endblock %}
     </head>
     <body>
-        <div id="wrapper">
+        <div class="container">
             <div id="menu">Menu</div>
             <div id="content">{% block content %}{% endblock %}</div>
             <div id="footer">
