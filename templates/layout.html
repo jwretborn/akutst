@@ -10,8 +10,38 @@
     </head>
     <body>
         <div class="container">
-            <div id="menu">Menu</div>
+
+            <!-- Menu -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">EM</a>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-left">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/patient">Patient</a></li>
+                            <li><a href="/procedure">Procedur</a></li>
+                            <li><a href="/diagnostics">Diagnostik</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Messages -->
+            <div id="messages">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Content -->
             <div id="content">{% block content %}{% endblock %}</div>
+
+            <!-- Footer -->
             <div id="footer">
                 {% block footer %}
                 &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
