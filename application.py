@@ -42,6 +42,10 @@ def procedure():
 	else:
 		return redirect(url_for('index'))
 
+@app.route('/diagnostic', methods=['GET', 'POST'])
+def diagnostic():
+	return redirect(url_for('index'))
+
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     app.run()

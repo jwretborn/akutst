@@ -17,6 +17,10 @@ class AppTestCase(unittest.TestCase):
 	def test_app_urls(self):
 		rv = self.app.get('/')
 		self.assertEqual(200, rv.status_code)
+		rv = self.app.get('/procedure')
+		self.assertEqual(302, rv.status_code)
+		rv = self.app.get('/diagnostic')
+		self.assertEqual(302, rv.status_code)
 
 if __name__ == '__main__':
     unittest.main()

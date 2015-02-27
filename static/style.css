@@ -1,0 +1,10 @@
+
+.container {
+	margin: 0 auto;
+	padding: 0 20px;
+	width: 800px;
+}
+
+#content {
+	background-color: none;
+}
