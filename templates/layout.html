@@ -2,14 +2,46 @@
 <html>
     <head>
         {% block head %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.2-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %} - My Webpage</title>
         {% endblock %}
     </head>
     <body>
-        <div id="wrapper">
-            <div id="menu">Menu</div>
+        <div class="container">
+
+            <!-- Menu -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">EM</a>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-left">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/patient">Patient</a></li>
+                            <li><a href="/procedure">Procedur</a></li>
+                            <li><a href="/diagnostics">Diagnostik</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Messages -->
+            <div id="messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Content -->
             <div id="content">{% block content %}{% endblock %}</div>
+
+            <!-- Footer -->
             <div id="footer">
                 {% block footer %}
                 &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
