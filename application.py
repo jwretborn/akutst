@@ -9,7 +9,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = '4\x04O\x8c\xf7koqz\xa0xez\xc4\xa7?.4\xceu\xc4\x8c0\x1b'
-app.config['DATABASE_URL='] = "postgresql://localhost/akutst"
+app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://localhost/akutst"
 app.debug = True
 db = SQLAlchemy(app)
@@ -48,4 +48,6 @@ def diagnostic():
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
+    print(os.environ['APP_SETTINGS'])
+
     app.run()
