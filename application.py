@@ -2,7 +2,8 @@ import os
 import time
 import psycopg2
 import urlparse
-from flask import Flask, request, redirect, url_for, flash
+import json
+from flask import Flask, request, redirect, url_for, flash, jsonify
 from flask import render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -16,7 +17,8 @@ from models import *
 @app.route("/")
 def index():
 	d = time.strftime("%Y-%m-%d")
-	return render_template('form.html', date_today=d)
+	procedure_types = db.session.query(ProcedureType).all()
+	return render_template('form.html', date_today=d, procedures=procedure_types)
 
 @app.route('/procedure', methods=['GET', 'POST'])
 def procedure():
@@ -42,6 +44,13 @@ def procedure():
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
 	return redirect(url_for('index'))
+
+@app.route('/group/<id>/items', methods=['GET'])
+def group_items(id):
+	query = db.session.query(Group).filter(Group.id == id)
+	group = query.first()
+	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).all()
+	return jsonify(items=[i.serialize for i in items])
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
