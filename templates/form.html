@@ -7,8 +7,8 @@
     </style>
 {% endblock %}
 {% block content %}
-    <h1>EM Procedures</h1>
-    <form name="procedures" action="procedure" method="POST" class="form-horizontal">
+    <h1>EM Procedurer</h1>
+    <form name="procedures" action="procedurer" method="POST" class="form-horizontal">
     	<div class="form-group">
     		<label for="id" class="col-sm-2 control-label">ID:</label>
     		<div class="col-sm-4">
@@ -16,22 +16,53 @@
     		</div>
     	</div>
     	<div class="form-group">
-    		<label for="procedure" class="col-sm-2 control-label">Procedure:</label>
+    		<label for="procedure" class="col-sm-2 control-label">Procedur:</label>
     		<div class="col-sm-4">
     			<select name="procedure" class="form-control">
                     {% for procedure in procedures %}
-        				<option value="{{ procedure.id }}">{{ procedure.name }}</option>
+        				<option value="{{ procedure.id }}" {% if procedure.id == p_type.id %} {{ 'selected' }} {% endif %}>{{ procedure.name }}</option>
                     {% endfor %}
     			</select>
     		</div>
     	</div>
+        <div class="form-group">
+            <label for="tuition" class="col-sm-2 control-label">Handledning</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="tuition" id="tuitionlRadio1" value="1"> Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="tuition" id="tuitionlRadio2" value="0"> No
+                </label>
+            </div>
+        </div>
+        <div class="form-group method">
+            <label for="method" class="col-sm-2 control-label">Metod:</label>
+            <div class="col-sm-4">
+                <select name="method" class="form-control">
+                    {% for method in methods %}
+                        <option value="{{ method.id }}">{{ method.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group anatomy">
+            <label for="anatomy" class="col-sm-2 control-label">Lokal:</label>
+            <div class="col-sm-4">
+                <select name="anatomy" class="form-control">
+                    {% for anatomy in anatomys %}
+                        <option value="{{ anatomy.id }}">{{ anatomy.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
     	<div class="form-group">
     		<label for="date" class="col-sm-2 control-label">Date</label>
     		<div class="col-sm-4">
     			<input type="date" class="form-control" name="date" value="{{ date_today }}" />
     		</div>
     	</div>
-    	<div class="form-group">
+    	<div class="form-group successful">
 			<label for="successful" class="col-sm-2 control-label">Successful</label>
 			<div class="col-sm-10">
 				<label class="radio-inline">
@@ -42,6 +73,12 @@
 				</label>
 			</div>
     	</div>
+        <div class="form-group">
+            <label for="comments" class="col-sm-2 control-label">Kommentar:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="comments" />
+            </div>
+        </div>
     	<div class="form-group">
     		<div class="col-sm-2"></div>
     		<div class="col-sm-4">
