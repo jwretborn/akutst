@@ -24,7 +24,28 @@ def ultrasound():
 
 @app.route("/patienter")
 def patients():
-	return render_template("patients.html")
+
+	if request.method == 'POST':
+		try :
+			p = Patient(
+			)
+			db.session.add(p)
+			db.session.commit()
+
+			flash(u'Proceduren sparad', 'info')
+		except:
+			flash(u'Something went wrong', 'warning')
+
+	d = time.strftime("%Y-%m-%d")
+	ages = []
+	levels = []
+	codes = []
+
+	ages = db.session.query(GroupItem).filter(GroupItem.group_id == 27) ### Hack
+	levels = db.session.query(GroupItem).filter(GroupItem.group_id == 26) ### Hack
+	codes = db.session.query(GroupItem).filter(GroupItem.group_id == 28)
+
+	return render_template("patients.html", date_today=d, ages=ages, levels=levels, codes=codes)
 
 @app.route('/procedurer', methods=['GET', 'POST'])
 @app.route('/procedurer/<id>', methods=['GET', 'POST'])

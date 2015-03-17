@@ -127,6 +127,7 @@ class Patient(db.Model):
 	triage_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=False)
 	retts_id = db.Column(db.Integer, db.ForeignKey('retts_codes.id'), nullable=True)
 	admittance = db.Column(db.Boolean, nullable=True)
+	tuition = db.Column(db.Boolean, default=False)
 	comments = db.Column(db.String(400))
 	created = db.Column(db.Date, default=db.func.now())
 
