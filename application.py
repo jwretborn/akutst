@@ -13,6 +13,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
 
 from models import *
+from forms import ProcedureForm, PatientForm
 
 @app.route("/")
 def index():
@@ -22,54 +23,79 @@ def index():
 def ultrasound():
 	return render_template('diagnostics.html')
 
-@app.route("/patienter")
+@app.route("/patienter", methods=['GET', 'POST'])
 def patients():
-
-	if request.method == 'POST':
+	form = PatientForm(request.form)
+	if request.method == 'POST' and form.validate() :
 		try :
+			username = form.user_id.data
+			user = db.session.query(User).filter(User.username == username).first()
+			
+			if user is None:
+				raise ValueError(u'ID existerar inte')
+
 			p = Patient(
+				user_id=user.id,
+				age_id=form.age.data,
+				triage_id=form.prio.data,
+				retts_id=form.retts.data,
+				admittance=form.admittance.data,
+				tuition=form.tuition.data,
+				comments=form.comments.data,
+				created=form.date.data
 			)
 			db.session.add(p)
 			db.session.commit()
+			flash(u'Patienten sparad', 'info')
+		except ValueError as err:
+			flash(err, 'warning')
+	else :
+		flash_form_errors(form)
 
-			flash(u'Proceduren sparad', 'info')
-		except:
-			flash(u'Something went wrong', 'warning')
 
-	d = time.strftime("%Y-%m-%d")
 	ages = []
 	levels = []
 	codes = []
-
+	d = time.strftime("%Y-%m-%d")
+	
 	ages = db.session.query(GroupItem).filter(GroupItem.group_id == 27) ### Hack
 	levels = db.session.query(GroupItem).filter(GroupItem.group_id == 26) ### Hack
-	codes = db.session.query(GroupItem).filter(GroupItem.group_id == 28)
-
+	codes = db.session.query(RettsCode).all()
+	
 	return render_template("patients.html", date_today=d, ages=ages, levels=levels, codes=codes)
 
 @app.route('/procedurer', methods=['GET', 'POST'])
 @app.route('/procedurer/<id>', methods=['GET', 'POST'])
 def procedure(id=False):
-	errors = []
 	procedure_type = False
-	if request.method == 'POST':
+	form = ProcedureForm(request.form)
+	if request.method == 'POST' and form.validate():
 		try :
+			## Fetch user
+			username = form.user_id.data
+			user = db.session.query(User).filter(User.username == username).first()
+
+			if user is None:
+				raise ValueError(u'ID existerar inte')
+
 			p = Procedure(
-				user_id=request.form['user_id'],
-				type=request.form['procedure'],
-				method=request.form['method'],
-				anatomy=request.form['anatomy'],
-				tuition=request.form['tuition'],
-				created=request.form['date'],
-				successful=request.form['successful'],
-				comments=request.form['comments']
+				user_id=user.id,
+				type=form.procedure.data,
+				method=form.method.data,
+				anatomy=form.anatomy.data,
+				tuition=form.tuition.data,
+				created=form.date.data,
+				successful=form.successful.data,
+				comments=form.comments.data
 			)
 			db.session.add(p)
 			db.session.commit()
 
-			flash(u'Proceduren sparad', 'info')
-		except:
-			flash(u'Something went wrong', 'warning')
+			flash(u'Proceduren sparad', 'success')
+		except ValueError as err:
+			flash(err, 'warning')
+	else :
+		flash_form_errors(form)
 
 	d = time.strftime("%Y-%m-%d")
 	p_types = db.session.query(ProcedureType).all()
@@ -89,6 +115,11 @@ def procedure(id=False):
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
 	return redirect(url_for('index'))
+
+def flash_form_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Fel %s field - %s" % (getattr(form, field).label.text,error), 'warning')
 
 @app.route('/api/procedure', methods=['GET'])
 @app.route('/api/procedure/<id>', methods=['GET'])
