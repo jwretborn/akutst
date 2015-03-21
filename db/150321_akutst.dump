@@ -1,0 +1,864 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE alembic_version OWNER TO johan;
+
+--
+-- Name: group_items; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE group_items (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    weight integer NOT NULL
+);
+
+
+ALTER TABLE group_items OWNER TO johan;
+
+--
+-- Name: group_items_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE group_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE group_items_id_seq OWNER TO johan;
+
+--
+-- Name: group_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE group_items_id_seq OWNED BY group_items.id;
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE groups (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL
+);
+
+
+ALTER TABLE groups OWNER TO johan;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE groups_id_seq OWNER TO johan;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+
+
+--
+-- Name: patients; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE patients (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    age_id integer NOT NULL,
+    triage_id integer NOT NULL,
+    retts_id integer,
+    admittance boolean,
+    comments character varying(400),
+    created date,
+    tuition boolean
+);
+
+
+ALTER TABLE patients OWNER TO johan;
+
+--
+-- Name: patients_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE patients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE patients_id_seq OWNER TO johan;
+
+--
+-- Name: patients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE patients_id_seq OWNED BY patients.id;
+
+
+--
+-- Name: procedure_types; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE procedure_types (
+    id integer NOT NULL,
+    method_group integer,
+    anatomy_group integer,
+    show_success boolean,
+    weight integer NOT NULL,
+    name character varying(64) NOT NULL
+);
+
+
+ALTER TABLE procedure_types OWNER TO johan;
+
+--
+-- Name: procedure_types_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE procedure_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE procedure_types_id_seq OWNER TO johan;
+
+--
+-- Name: procedure_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE procedure_types_id_seq OWNED BY procedure_types.id;
+
+
+--
+-- Name: procedures; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE procedures (
+    id integer NOT NULL,
+    created date,
+    successful boolean,
+    comments character varying(400),
+    procedure_type integer NOT NULL,
+    anatomy_id integer,
+    method_id integer,
+    tuition boolean,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE procedures OWNER TO johan;
+
+--
+-- Name: procedures_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE procedures_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE procedures_id_seq OWNER TO johan;
+
+--
+-- Name: procedures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE procedures_id_seq OWNED BY procedures.id;
+
+
+--
+-- Name: retts_codes; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE retts_codes (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    code integer NOT NULL
+);
+
+
+ALTER TABLE retts_codes OWNER TO johan;
+
+--
+-- Name: retts_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE retts_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE retts_codes_id_seq OWNER TO johan;
+
+--
+-- Name: retts_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE retts_codes_id_seq OWNED BY retts_codes.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: johan; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    name character varying(32),
+    username character varying(32)
+);
+
+
+ALTER TABLE users OWNER TO johan;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: johan
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_id_seq OWNER TO johan;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: johan
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY group_items ALTER COLUMN id SET DEFAULT nextval('group_items_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY patients ALTER COLUMN id SET DEFAULT nextval('patients_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedure_types ALTER COLUMN id SET DEFAULT nextval('procedure_types_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedures ALTER COLUMN id SET DEFAULT nextval('procedures_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY retts_codes ALTER COLUMN id SET DEFAULT nextval('retts_codes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY alembic_version (version_num) FROM stdin;
+38b548d22c10
+\.
+
+
+--
+-- Data for Name: group_items; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY group_items (id, group_id, name, weight) FROM stdin;
+1	1	Ultraljud	0
+2	1	Palpation	0
+3	2	Radialis	0
+4	2	Femoralis	0
+5	3	Tibia	0
+6	3	Humerus	0
+7	4	Rakt bakifrån	0
+8	4	Från sidan	0
+9	5	Knä, medialt	0
+10	5	Knä, lateralt	0
+11	5	Axel, dorsalt	0
+12	5	Axel, lateralt	0
+13	5	Fotled	0
+14	5	Handled	0
+15	5	Annan	0
+16	6	RSI	0
+17	6	Elektivt	0
+18	7	Utåtrotation	0
+19	7	Milch	0
+20	7	Stimson	0
+21	7	Scapulamanipulation	0
+22	7	Traction-countertraction	0
+23	8	Fotled	0
+24	8	Radius	0
+25	8	Armbåge	0
+26	8	Piglux	0
+27	8	Patella	0
+28	8	Femur	0
+29	8	Finger	0
+30	9	Skalpell	0
+31	9	Färdigt kit	0
+32	10	Akut	0
+33	10	Elektivt	0
+35	11	Intracutan+Subcutan	0
+34	11	Enstaka	0
+36	11	Stående madrasser	0
+37	11	Liggande madrasser	0
+38	11	Staples	0
+39	12	Huvud	0
+40	12	Ansikte	0
+41	12	Läpp	0
+42	12	Övre extremitet	0
+43	12	Nedre extremitet	0
+45	12	Rygg	0
+44	12	Bål	0
+46	13	Ansiktsmask	0
+47	13	Larynxmask	0
+48	13	Näskantarell	0
+49	14	Ultraljud	0
+50	14	Blint	0
+51	15	Jugularis	0
+52	14	Subclavia	0
+53	16	Sätesbjudning	0
+54	16	Kronbjudning	0
+55	17	Ultraljud	0
+56	17	Blint	0
+57	18	Brachialplexa	0
+58	18	Annan	0
+59	19	Lustgas	0
+60	19	Narkosgas	0
+61	19	Opioid	0
+62	19	Propofol	0
+63	19	Ketamin	0
+64	19	Klonidin	0
+65	20	Bakre	0
+66	20	Främre	0
+67	21	Suprapubis	0
+68	21	Ureträr	0
+69	22	Kvinna	0
+70	22	Man	0
+73	26	Röd	0
+74	26	Orange	0
+75	26	Gul	0
+76	26	Grön	0
+77	26	Blå	0
+78	27	Vuxen	0
+79	27	13-18 år	0
+80	27	4-12 år	0
+81	27	1-3 år	0
+82	27	3-12 månader	0
+83	27	0-2 månader	0
+84	24	Negativt	0
+85	24	Positivt	0
+\.
+
+
+--
+-- Name: group_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('group_items_id_seq', 85, true);
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY groups (id, name) FROM stdin;
+1	arterial_access_method
+2	arterial_access_anatomy
+3	intraosseous_acess_anatomy
+4	lumbar_puncture_method
+5	joint_puncture_anatomy
+6	intubation_method
+7	shoulder_relocation_method
+8	reponation_anatomy
+9	coneotomy_method
+10	electric_conversion_method
+11	suturation_method
+12	suturation_anatomy
+13	airway_method
+14	central_venous_access_method
+15	central_venous_access_anatomy
+16	delivery_method
+17	neural_blockade_method
+18	neural_blockade_anatomy
+19	sedation_method
+20	nasal_tamponade_method
+21	urine_catheter_method
+22	urine_catheter_anatomy
+24	diagnostics_answer
+25	ultrasound_organs
+26	colours
+27	Ages
+28	RETTS-adult
+29	RETTS-P
+\.
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('groups_id_seq', 29, true);
+
+
+--
+-- Data for Name: patients; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY patients (id, user_id, age_id, triage_id, retts_id, admittance, comments, created, tuition) FROM stdin;
+\.
+
+
+--
+-- Name: patients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('patients_id_seq', 1, false);
+
+
+--
+-- Data for Name: procedure_types; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY procedure_types (id, method_group, anatomy_group, show_success, weight, name) FROM stdin;
+1	1	2	t	0	Artärnål
+2	\N	2	t	0	Blodgas
+3	\N	\N	t	0	PVK
+5	4	\N	t	0	Lumbalpunktion
+4	\N	3	t	0	Intraosseös nål
+6	\N	5	t	0	Artrocentes
+7	6	\N	t	0	Intubation
+8	7	\N	t	0	Axelreponering
+9	\N	8	t	0	Annan reponering
+10	9	\N	t	0	Koniotomi
+11	\N	\N	f	0	Thorakotomi
+12	\N	\N	t	0	Pleuradrän
+13	10	\N	f	0	Elkonvertering
+14	11	12	f	0	Suturering
+15	\N	12	f	0	Incisioner
+16	13	\N	t	0	Luftvägshantering
+17	\N	\N	t	0	Nasogastrisk sond
+18	\N	\N	f	0	Rektoskopi+Proktoskopi
+19	\N	\N	t	0	Esophagus_EKG
+20	\N	\N	t	0	Extern pacemaker
+21	14	15	t	0	CVK
+22	16	\N	f	0	Förlossning
+23	17	18	t	0	Nervblockad
+24	19	\N	f	0	Sövning/Sedering
+25	\N	\N	f	0	Fiberskopi
+26	20	\N	t	0	Nästamponad
+27	21	22	t	0	KAD
+28	\N	\N	t	0	Perikardiocentes
+29	\N	\N	t	0	Laparocentes
+30	\N	\N	f	0	Gynundersökning
+\.
+
+
+--
+-- Name: procedure_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('procedure_types_id_seq', 30, true);
+
+
+--
+-- Data for Name: procedures; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY procedures (id, created, successful, comments, procedure_type, anatomy_id, method_id, tuition, user_id) FROM stdin;
+\.
+
+
+--
+-- Name: procedures_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('procedures_id_seq', 1, false);
+
+
+--
+-- Data for Name: retts_codes; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY retts_codes (id, name, code) FROM stdin;
+1	Onormal hjärtrytm	1
+2	Förmaksflimmer	1
+3	Högt blodtryck	2
+4	Lågt blodtryck	2
+6	Näsblödning	3
+7	Tonsillblödning	3
+8	Dyspné/andningsbesvär	4
+9	Hyperventilation	4
+10	Bröstsmärta vid andning	4
+11	Bröstsmärta	5
+5	Hemoptys	3
+12	Bröstkorgssmärta  UNS	5
+13	Buksmärta	6
+14	Flanksmärta	6
+15	Illamående/kräkning	6
+16	Diarré UNS	6
+17	Smärta/svullnad ljumske	6
+18	Hematemes	7
+19	Melena	7
+20	Symptom i anus och rektum	7
+21	GI-blödning	7
+22	Ikterus	8
+23	Ascites	8
+24	Kramper UNS	9
+25	Epilepsi (känd)	9
+26	Feberkramper	9
+27	Sensibilitetsstörning	10
+28	Tremor	10
+29	Yrsel och svindel	11
+30	Stroke	12
+31	Neurologiskt bortfall/TIA	12
+32	Ledvärk	13
+33	Ryggsmärta	14
+34	Smärtor i bröstrygg	14
+35	Smärta i extremitet	15
+36	Svullnad i extremitet	15
+37	Underbensödem	15
+38	Ödem UNS	15
+39	Extremitetsproblem	15
+40	Smärta vid vattenkastning	16
+41	Urinretention	16
+42	Hematuri	16
+43	Urinproblem	16
+44	Underlivsbesvär hos män	17
+45	Skrotal smärta	17
+46	Huvudvärk	19
+47	Syncope	20
+48	Underlivsbesvär hos kvinnor	21
+49	Graviditet	21
+50	Vaginal blödning	21
+51	Postpartum<30 d	21
+53	Skada nacke/hals	30
+54	Hängning/strypning	30
+55	Skada thorax/rygg	31
+56	Skada buk/bäcken	31
+52	Skada/trauma huvud	30
+57	Skada hand/arm	33
+58	Skada axel	33
+59	Skada höft/lår	34
+60	Skada knä/underben	34
+61	Skada fot	34
+62	Brännskada/frätskada	35
+63	Inhalationsskada/kolmonoxid	35
+64	Kemskada	35
+65	Elolycka	35
+66	Blixtnedslag	35
+67	Strålskada	35
+68	Skada på öga	37
+69	Infektion öga	37
+70	Ögonproblem	37
+71	Traumalarmsaktiveringsalgoritm	39
+72	Förgiftning av andra substanser	40
+73	Förgiftning alkohol	40
+74	Förgiftning svamp	40
+75	Toxiska effekter av djur UNS	41
+76	Stick och bett av djur	41
+77	Fysisk misshandel	42
+78	Sexuellt våld	42
+79	Allergi	43
+80	Läkemedelsreaktion UNS	43
+81	Exantem	43
+82	Främmande kropp öra	45
+83	Öronproblem	45
+84	Främmande kropp i näsa	46
+85	Främmande kropp i luftväg	46
+86	Främmande kropp i esofagus	46
+87	Näsproblem	46
+88	Halsont	46
+89	Akut laryngofaryngit	46
+90	Infektion UNS	47
+91	Feber	47
+92	Lokal infektion	47
+93	Anemi	48
+94	Diabetes (känd)	49
+95	Hyperglykemi	49
+96	Hypoglykemi	50
+97	Känd binjurebarkssvikt	51
+98	Immunbrist eller immunosuppression	51
+99	Ospecifik psykisk ohälsa	52
+100	Ospecifik sjukdom UNS	53
+101	Sjukdomskänsla/trötthet	53
+102	Fallbenägenhet	53
+103	Hälsoundersökning	53
+104	Intyg misshandel	53
+105	Provsvarsalgoritm	70
+106	Gipsproblem	71
+107	Operationskomplikation	72
+\.
+
+
+--
+-- Name: retts_codes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('retts_codes_id_seq', 107, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: johan
+--
+
+COPY users (id, name, username) FROM stdin;
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: johan
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, false);
+
+
+--
+-- Name: group_items_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY group_items
+    ADD CONSTRAINT group_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: patients_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY patients
+    ADD CONSTRAINT patients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: procedure_types_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY procedure_types
+    ADD CONSTRAINT procedure_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: procedures_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY procedures
+    ADD CONSTRAINT procedures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: retts_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY retts_codes
+    ADD CONSTRAINT retts_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: johan; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: group_items_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY group_items
+    ADD CONSTRAINT group_items_group_id_fkey FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
+-- Name: patients_age_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY patients
+    ADD CONSTRAINT patients_age_id_fkey FOREIGN KEY (age_id) REFERENCES group_items(id);
+
+
+--
+-- Name: patients_retts_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY patients
+    ADD CONSTRAINT patients_retts_id_fkey FOREIGN KEY (retts_id) REFERENCES retts_codes(id);
+
+
+--
+-- Name: patients_triage_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY patients
+    ADD CONSTRAINT patients_triage_id_fkey FOREIGN KEY (triage_id) REFERENCES group_items(id);
+
+
+--
+-- Name: patients_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY patients
+    ADD CONSTRAINT patients_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: procedure_types_anatomy_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedure_types
+    ADD CONSTRAINT procedure_types_anatomy_group_fkey FOREIGN KEY (anatomy_group) REFERENCES groups(id);
+
+
+--
+-- Name: procedure_types_method_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedure_types
+    ADD CONSTRAINT procedure_types_method_group_fkey FOREIGN KEY (method_group) REFERENCES groups(id);
+
+
+--
+-- Name: procedures_anatomy_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedures
+    ADD CONSTRAINT procedures_anatomy_id_fkey FOREIGN KEY (anatomy_id) REFERENCES group_items(id);
+
+
+--
+-- Name: procedures_method_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedures
+    ADD CONSTRAINT procedures_method_id_fkey FOREIGN KEY (method_id) REFERENCES group_items(id);
+
+
+--
+-- Name: procedures_procedure_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedures
+    ADD CONSTRAINT procedures_procedure_type_fkey FOREIGN KEY (procedure_type) REFERENCES procedure_types(id);
+
+
+--
+-- Name: procedures_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: johan
+--
+
+ALTER TABLE ONLY procedures
+    ADD CONSTRAINT procedures_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: johan
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM johan;
+GRANT ALL ON SCHEMA public TO johan;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
