@@ -10,7 +10,7 @@
     <h1>Patient</h1>
     <form name="patients" action="patienter" method="POST" class="form-horizontal">
     	<div class="form-group">
-    		<label for="id" class="col-sm-2 control-label">ID:</label>
+    		<label for="id" class="col-sm-2 control-label">User:</label>
     		<div class="col-sm-4">
     			<input type="user_id" class="form-control" name="user_id" />
     		</div>
@@ -42,22 +42,22 @@
                 </label>
             </div>
         </div>
-        <div class="form-group retts">
-            <label for="retts" class="col-sm-2 control-label">Sökorsak:</label>
-            <div class="col-sm-4">
-                <select name="retts" class="form-control">
-                    {% for code in codes %}
-                        <option value="{{ code.id }}">{{ code.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
         <div class="form-group age">
             <label for="age" class="col-sm-2 control-label">Ålder:</label>
             <div class="col-sm-4">
                 <select name="age" class="form-control">
                     {% for age in ages %}
                         <option value="{{ age.id }}">{{ age.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group retts">
+            <label for="retts" class="col-sm-2 control-label">Sökorsak:</label>
+            <div class="col-sm-4">
+                <select name="retts" class="form-control">
+                    {% for code in codes %}
+                        <option value="{{ code.id }}">{{ code.name }}</option>
                     {% endfor %}
                 </select>
             </div>

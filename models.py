@@ -146,6 +146,7 @@ class RettsCode(db.Model):
 	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	name = db.Column(db.String(64), nullable=False)
 	code = db.Column(db.Integer, nullable=False)
+	type = db.Column(db.String(16))
 
 	def __repr__(self):
 		return '<RETTS Code {}>'.format(self.id)
