@@ -46,7 +46,7 @@ def patients():
 			)
 			db.session.add(p)
 			db.session.commit()
-			flash(u'Patienten sparad', 'info')
+			flash(u'Patienten sparad', 'success')
 		except ValueError as err:
 			flash(err, 'warning')
 	else :
