@@ -10,19 +10,19 @@
     <h1>Patient</h1>
     <form name="patients" action="patienter" method="POST" class="form-horizontal">
     	<div class="form-group">
-    		<label for="id" class="col-sm-2 control-label">User:</label>
+    		<label for="id" class="col-sm-2 control-label">Användare</label>
     		<div class="col-sm-4">
     			<input type="user_id" class="form-control" name="user_id" />
     		</div>
     	</div>
     	<div class="form-group">
-    		<label for="date" class="col-sm-2 control-label">Date</label>
+    		<label for="date" class="col-sm-2 control-label">Datum</label>
     		<div class="col-sm-4">
     			<input type="date" class="form-control" name="date" value="{{ date_today }}" />
     		</div>
     	</div>
     	<div class="form-group">
-    		<label for="prio" class="col-sm-2 control-label">Prio:</label>
+    		<label for="prio" class="col-sm-2 control-label">Prio</label>
     		<div class="col-sm-4">
     			<select name="prio" class="form-control">
                     {% for level in levels %}
@@ -31,19 +31,8 @@
     			</select>
     		</div>
     	</div>
-        <div class="form-group">
-            <label for="tuition" class="col-sm-2 control-label">Handledning</label>
-            <div class="col-sm-10">
-                <label class="radio-inline">
-                    <input type="radio" name="tuition" id="tuitionlRadio1" value="1"> Yes
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="tuition" id="tuitionlRadio2" value="0"> No
-                </label>
-            </div>
-        </div>
         <div class="form-group age">
-            <label for="age" class="col-sm-2 control-label">Ålder:</label>
+            <label for="age" class="col-sm-2 control-label">Ålder</label>
             <div class="col-sm-4">
                 <select name="age" class="form-control">
                     {% for age in ages %}
@@ -53,7 +42,7 @@
             </div>
         </div>
         <div class="form-group retts">
-            <label for="retts" class="col-sm-2 control-label">Sökorsak:</label>
+            <label for="retts" class="col-sm-2 control-label">Sökorsak</label>
             <div class="col-sm-4">
                 <select name="retts" class="form-control">
                     {% for code in codes %}
@@ -66,15 +55,26 @@
             <label for="admittance" class="col-sm-2 control-label">Inläggning</label>
             <div class="col-sm-10">
                 <label class="radio-inline">
-                    <input type="radio" name="admittance" id="admittancelRadio1" value="1"> Yes
+                    <input type="radio" name="admittance" id="admittancelRadio1" value="1"> Ja
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="admittance" id="admittancelRadio2" value="0"> No
+                    <input type="radio" name="admittance" id="admittancelRadio2" value="0"> Nej
                 </label>
             </div>
         </div>
         <div class="form-group">
-            <label for="comments" class="col-sm-2 control-label">Kommentar:</label>
+            <label for="tuition" class="col-sm-2 control-label">Handledning</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="tuition" id="tuitionlRadio1" value="1"> Ja
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="tuition" id="tuitionlRadio2" value="0"> Nej
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="comments" class="col-sm-2 control-label">Kommentar</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" name="comments" />
             </div>
