@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+import os
 from sqlalchemy import create_engine, schema
 from sqlalchemy.sql import text
 
