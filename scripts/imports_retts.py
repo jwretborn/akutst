@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, schema
 from sqlalchemy.sql import text
 
-eng = create_engine('postgresql://localhost/akutst')
+eng = create_engine(os.environ['DATABASE_URL'])
 con = eng.connect()
 
 # Read file
