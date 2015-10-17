@@ -46,7 +46,7 @@
             <div class="col-sm-4">
                 <select name="retts" class="form-control">
                     {% for code in codes %}
-                        <option value="{{ code.id }}">{{ code.name }}</option>
+                        <option value="{{ code.id }}">{{ code.name }} - {{ code.type }}</option>
                     {% endfor %}
                 </select>
             </div>
