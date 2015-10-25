@@ -1,8 +1,9 @@
 {
-  "name" : "akutst",
-  "version" : "0.0.1",
+  "name": "akutst",
+  "version": "0.0.1",
   "scripts": {
-    "build" : "node_modules/.bin/webpack --progress --profile --colors"
+    "start": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline",
+    "build": "node_modules/.bin/webpack --progress --profile --colors --watch"
   },
   "dependencies": {
     "babel-core": "^5.8.25",
@@ -16,5 +17,8 @@
     "react-dom": "^0.14.0",
     "sass-loader": "^3.0.0",
     "webpack": "^1.12.2"
+  },
+  "devDependencies": {
+    "webpack-cleanup-plugin": "^0.1.1"
   }
 }
