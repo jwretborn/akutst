@@ -1,11 +1,13 @@
-import os
+from os import path, environ
 
 class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = '4\x04O\x8c\xf7koqz\xa0xez\xc4\xa7?.4\xceu\xc4\x8c0\x1b'
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = environ['DATABASE_URL']
+    WEBPACK_MANIFEST_PATH = path.join(path.abspath(path.dirname(__file__)), "manifest.json")
+    WEBPACK_ASSETS_URL = ''
 
 class ProductionConfig(Config):
     DEBUG = False

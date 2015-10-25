@@ -1,0 +1,4 @@
+include package.json
+
+recursive-include demo/templates *.html
+recursive-include demo/public *.js *.css

@@ -1,16 +1,23 @@
-import os
 import time
 import psycopg2
 import urlparse
 import json
+from os import environ, path
 from flask import Flask, request, redirect, url_for, flash, jsonify
-from flask import render_template
+from flask import render_template, send_from_directory
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_webpack import Webpack
 
 
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+
+here = path.dirname(path.realpath(__file__))
+app.config.from_object(environ['APP_SETTINGS'])
+debug = "DEBUG" in environ
 db = SQLAlchemy(app)
+
+webpack = Webpack()
+webpack.init_app(app)
 
 from models import *
 from forms import ProcedureForm, PatientForm
@@ -148,6 +155,10 @@ def group_items(id):
 	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).all()
 	return jsonify(items=[i.serialize for i in items])
 
+@app.route("/assets/<path:filename>")
+def send_asset(filename):
+    return send_from_directory(path.join(here, "public"), filename)
+
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
-    app.run()
+	app.run(extra_files=[app.config["WEBPACK_MANIFEST_PATH"]])
