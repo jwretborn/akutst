@@ -148,6 +148,16 @@ def api_procedure_type(id=False):
 		procedure_types = db.session.query(ProcedureType).all()
 		return jsonify(items=[i.serialize for i in procedure_types])
 
+@app.route('/api/codes', methods=['GET'])
+@app.route('/api/codes/<id>', methods=['GET'])
+def api_retts_codes(id=False):
+	if id :
+		code = db.session.query(RettsCode).filter(RettsCode.id == id).first()
+		return jsonify(code.serialize)
+	else :
+		codes = db.session.query(RettsCode).all()
+		return jsonify(items=[i.serialize for i in codes])
+
 @app.route('/api/group/<id>/items', methods=['GET'])
 def group_items(id):
 	query = db.session.query(Group).filter(Group.id == id)

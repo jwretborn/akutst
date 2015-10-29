@@ -21,7 +21,9 @@ module.exports = {
         path : buildOutputPath,
         publicPath: publicHost +"/assets/",
         filename: "[name].[hash].js",
+        //filename: "[name].js", // development
         chunkFilename: "[id].[hash].chunk"
+        //chunkFilename: "[id]"
     },
     resolve: {
         extensions: ["", ".js", ".scss"]
