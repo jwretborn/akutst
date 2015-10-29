@@ -148,6 +148,16 @@ class RettsCode(db.Model):
 	code = db.Column(db.Integer, nullable=False)
 	type = db.Column(db.String(16))
 
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'id'		: self.id,
+			'name'		: self.name,
+			'code'  	: self.code,
+			'type'		: self.type
+		}
+
 	def __repr__(self):
 		return '<RETTS Code {}>'.format(self.id)
 

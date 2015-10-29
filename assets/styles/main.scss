@@ -1,0 +1,17 @@
+$font-stack: Helvetica, Arial, sans;
+$primary-color: #222;
+
+body {
+    font-family: $font-stack;
+    color: $primary-color;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.dynamic-search ul {
+	position: absolute;
+	width: 300px;
+	margin-left: 400px;
+}
