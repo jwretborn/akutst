@@ -24,7 +24,7 @@ from forms import ProcedureForm, PatientForm
 
 @app.route("/")
 def index():
-	return redirect(url_for('patienter'))
+	return redirect(url_for('patients'))
 
 @app.route("/ultraljud")
 def ultrasound():
