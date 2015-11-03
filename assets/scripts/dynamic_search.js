@@ -14,6 +14,7 @@ export default class DynamicSearch extends Component {
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSelect = this.handleSelect.bind(this);
+		this.filterItems = this.filterItems.bind(this);
 	}
 
 	// Do initial loading
@@ -21,6 +22,23 @@ export default class DynamicSearch extends Component {
 		$.get(this.props.url, function(data) {
 			this.setState({listItems : data.items});
 		}.bind(this));
+	}
+
+	filterItems(items) {
+		if (this.props.filterKey !== '') {
+			items = items.filter(function(items){
+				if (items[this.props.filterKey] == null) {
+					if (this.props.filterValue === '') {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				return items[this.props.filterKey].toLowerCase().match(this.props.filterValue);
+			}.bind(this));
+		}
+		return items;
 	}
 
 	// sets state, triggers render method
@@ -52,14 +70,14 @@ export default class DynamicSearch extends Component {
 	}
 
 	render() {
-		var codes = this.state.listItems;
+		var codes = this.filterItems(this.state.listItems);
 		var searchString = this.state.searchString.trim().toLowerCase();
 		var value = this.state.value;
 
 		// filter countries list by value from input box
 		if(searchString.length > 0){
 			codes = codes.filter(function(codes){
-				return codes[this.props.mapName].toLowerCase().match( searchString );
+				return codes[this.props.mapValue].toLowerCase().match( searchString );
 			}.bind(this));	// bind to component
 		}
 
@@ -81,9 +99,9 @@ export default class DynamicSearch extends Component {
         				return (
         					<li 
         						className="list-group-item clickable" 
-        						value={code[this.props.mapValue]} 
-        						onClick={this.handleSelect(code[this.props.mapName], code[this.props.mapValue])}>
-        						<span className="badge">{code[this.props.mapBadge]}</span>{code[this.props.mapName]} 
+        						value={code[this.props.mapKey]} 
+        						onClick={this.handleSelect(code[this.props.mapValue], code[this.props.mapKey])}>
+        						<span className="badge">{code[this.props.mapBadge]}</span>{code[this.props.mapValue]} 
         					</li> 
         				);
         			}.bind(this)) }
@@ -94,9 +112,12 @@ export default class DynamicSearch extends Component {
 }
 
 DynamicSearch.defaultProps = {
-	mapName			: 'name',
+	mapValue		: 'name',
 	mapBadge		: '',
-	mapValue		: 'id',
+	mapKey			: 'id',
 	name 			: 'dynamic-search',
 	nameDisplay		: 'Search',
+	filterKey		: '',
+	filterValue		: '',
+	url				: ''
 }

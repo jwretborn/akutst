@@ -1,4 +1,4 @@
 import React from 'react';
-import DynamicSearch from './dynamic_search.js';
+import PatientForm from './patient_form.js';
 
-React.render(<DynamicSearch url={ '/api/codes' } mapBadge={'type'} name={'retts'} nameDisplay={'Sökorsak'} />, document.getElementById('retts-react'));
+React.render(<PatientForm />, document.getElementById('patients-react'));

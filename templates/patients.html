@@ -31,28 +31,7 @@
     			</select>
     		</div>
     	</div>
-        <div class="form-group age">
-            <label for="age" class="col-sm-2 control-label">Ålder</label>
-            <div class="col-sm-4">
-                <select name="age" class="form-control">
-                    {% for age in ages %}
-                        <option value="{{ age.id }}">{{ age.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <!-- div class="form-group retts">
-            <label for="retts" class="col-sm-2 control-label">Sökorsak</label>
-            <div class="col-sm-4">
-                <select name="retts" class="form-control">
-                    {% for code in codes %}
-                        <option value="{{ code.id }}">{{ code.name }} - {{ code.type }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div -->
-        <div class="form-group" id="retts-react">
-        </div>
+        <div id="patients-react"></div>
     	<div class="form-group">
             <label for="admittance" class="col-sm-2 control-label">Inläggning</label>
             <div class="col-sm-10">

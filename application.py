@@ -160,7 +160,10 @@ def api_retts_codes(id=False):
 
 @app.route('/api/group/<id>/items', methods=['GET'])
 def group_items(id):
-	query = db.session.query(Group).filter(Group.id == id)
+	if isinstance(id, ( int, long) ) :
+		query = db.session.query(Group).filter(Group.id == id)
+	else :
+		query = db.session.query(Group).filter(Group.name == id)
 	group = query.first()
 	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).all()
 	return jsonify(items=[i.serialize for i in items])
