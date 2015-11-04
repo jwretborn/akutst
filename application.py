@@ -165,7 +165,7 @@ def group_items(id):
 	else :
 		query = db.session.query(Group).filter(Group.name == id)
 	group = query.first()
-	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).all()
+	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
 	return jsonify(items=[i.serialize for i in items])
 
 @app.route("/assets/<path:filename>")
