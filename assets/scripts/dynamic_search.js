@@ -83,24 +83,28 @@ export default class DynamicSearch extends Component {
 
 		return (
 			<div className="dynamic-search">
-				<label for="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
+				<label htmlFor="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
 				<div className="col-sm-4">
                 	<input 
-                		type="text" 
-                		className="form-control" 
-                		value={searchString} 
-                		onChange={this.handleChange} 
-                		placeholder="Search" />
+                		type 		= "text" 
+                		className 	= "form-control" 
+                		value 		= { searchString } 
+                		onChange 	= { this.handleChange }
+                		placeholder = "Search" />
 
-                	<input type="hidden" name={this.props.name} value={value} />
+                	<input 
+                		type 		= "hidden" 
+                		name 		= { this.props.name } 
+                		value 		= { value } />
 				</div>
 				<ul className={this.state.display + " list-group col-sm-6"}>
         			{ codes.map(function(code){ 
         				return (
         					<li 
-        						className="list-group-item clickable" 
-        						value={code[this.props.mapKey]} 
-        						onClick={this.handleSelect(code[this.props.mapValue], code[this.props.mapKey])}>
+        						key 		= { code.id }
+        						className 	= "list-group-item clickable" 
+        						value 		= { code[this.props.mapKey] } 
+        						onClick 	= { this.handleSelect(code[this.props.mapValue], code[this.props.mapKey]) } >
         						<span className="badge">{code[this.props.mapBadge]}</span>{code[this.props.mapValue]} 
         					</li> 
         				);

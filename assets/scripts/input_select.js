@@ -42,7 +42,7 @@ export default class InputSelect extends Component {
 
 		return (
 				 <div className={this.props.name + "form-group"}>
-					<label for={this.props.name} className="col-sm-2 control-label">Ålder</label>
+					<label htmlFor={this.props.name} className="col-sm-2 control-label">Ålder</label>
 					<div className="col-sm-4">
 					    <select 
 					    	name={this.props.name} 
@@ -50,7 +50,11 @@ export default class InputSelect extends Component {
 					    	onChange={this.handleSelect}>
 					    { items.map(function(item){
 					    	return (
-					            <option value={ item[this.props.mapKey] }>{ item[this.props.mapValue] }</option>
+					            <option 
+					            	key 	= { item.id }
+					            	value 	= { item[this.props.mapKey] }>
+					            	{ item[this.props.mapValue] }
+					            </option>
 					    	);
 					    }.bind(this)) }
 					    </select>
