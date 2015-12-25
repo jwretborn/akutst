@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DynamicSearch from './dynamic_search.js';
 import InputSelect from './input_select.js';
+import ProcedureForm from './procedure-form.js';
 
 export default class PatientForm extends Component {
 
@@ -9,15 +10,28 @@ export default class PatientForm extends Component {
 		var d = new Date();
 
 		this.state = {
-			searchFilter : '',
-			date : d.toISOString().substring(0, 10)
+			searchFilter 	: '',
+			date 			: d.toISOString().substring(0, 10),
+			user_id 		: false
 		}
 
 		this.handleSelectChange = this.handleSelectChange.bind(this);
+		this.handleFieldChange = this.handleFieldChange.bind(this);
 	}
 
 	componentWillMount() {
 
+	}
+
+	handleFieldChange(field) {
+		return function(event) {
+			var elem = (typeof event.selectedIndex === "undefined" ? event.target : event);
+    		var value = elem.value || elem.options[elem.selectedIndex].value;
+			var newState = {};
+			newState[field] = value;
+
+    		this.setState(newState);
+    	}.bind(this);
 	}
 
 	handleSelectChange(key, value, name) {
@@ -39,15 +53,24 @@ export default class PatientForm extends Component {
 		return (
 			<div>
 				<div className="form-group">
-					<label for="id" className="col-sm-2 control-label">Användare</label>
+					<label htmlFor="id" className="col-sm-2 control-label">Användare</label>
 					<div className="col-sm-4">
-						<input type="text" className="form-control" name="user_id" />
+						<input 
+							type 		=	"text" 
+							className 	=	"form-control" 
+							name 		=	"user_id" 
+							onBlur		=	{ this.handleFieldChange('user_id') } />
 					</div>
 				</div>
 				<div className="form-group">
-					<label for="date" className="col-sm-2 control-label">Datum</label>
+					<label htmlFor="date" className="col-sm-2 control-label">Datum</label>
 					<div className="col-sm-4">
-						<input type="date" className="form-control" name="date" defaultValue={ this.state.date } />
+						<input 
+							type 		= 	"date" 
+							className 	=	"form-control" 
+							name 		= 	"date" 
+							defaultValue=	{ this.state.date } 
+							onBlur 		=	{ this.handleFieldChange('date') } />
 					</div>
 				</div>
 				<div className="form-group">
@@ -72,7 +95,7 @@ export default class PatientForm extends Component {
 						filterValue =	{ this.state.searchFilter } />
 				</div>
 				<div className="form-group">
-					<label for="admittance" className="col-sm-2 control-label">Inläggning</label>
+					<label htmlFor="admittance" className="col-sm-2 control-label">Inläggning</label>
 					<div className="col-sm-4">
 					    <label className="radio-inline">
 					        <input type="radio" name="admittance" id="admittancelRadio1" value="1" /> Ja
@@ -83,7 +106,7 @@ export default class PatientForm extends Component {
 					</div>
 				</div>
 				<div className="form-group">
-					<label for="tuition" className="col-sm-2 control-label">Handledning</label>
+					<label htmlFor="tuition" className="col-sm-2 control-label">Handledning</label>
 					<div className="col-sm-4">
 						<label className="radio-inline">
 							<input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
@@ -94,7 +117,7 @@ export default class PatientForm extends Component {
 					</div>
 				</div>
 				<div className="form-group">
-					<label for="comments" className="col-sm-2 control-label">Kommentar</label>
+					<label htmlFor="comments" className="col-sm-2 control-label">Kommentar</label>
 					<div className="col-sm-4">
 						<input type="text" className="form-control" name="comments" />
 					</div>
