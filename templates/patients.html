@@ -9,62 +9,6 @@
 {% block content %}
     <h1>Patient</h1>
     <form name="patients" action="patienter" method="POST" class="form-horizontal">
-    	<div class="form-group">
-    		<label for="id" class="col-sm-2 control-label">Användare</label>
-    		<div class="col-sm-4">
-    			<input type="text" class="form-control" name="user_id" />
-    		</div>
-    	</div>
-    	<div class="form-group">
-    		<label for="date" class="col-sm-2 control-label">Datum</label>
-    		<div class="col-sm-4">
-    			<input type="date" class="form-control" name="date" value="{{ date_today }}" />
-    		</div>
-    	</div>
-    	<div class="form-group">
-    		<label for="prio" class="col-sm-2 control-label">Prio</label>
-    		<div class="col-sm-4">
-    			<select name="prio" class="form-control">
-                    {% for level in levels %}
-        				<option value="{{ level.id }}">{{ level.name }}</option>
-                    {% endfor %}
-    			</select>
-    		</div>
-    	</div>
         <div id="patients-react"></div>
-    	<div class="form-group">
-            <label for="admittance" class="col-sm-2 control-label">Inläggning</label>
-            <div class="col-sm-4">
-                <label class="radio-inline">
-                    <input type="radio" name="admittance" id="admittancelRadio1" value="1"> Ja
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="admittance" id="admittancelRadio2" value="0"> Nej
-                </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="tuition" class="col-sm-2 control-label">Handledning</label>
-            <div class="col-sm-4">
-                <label class="radio-inline">
-                    <input type="radio" name="tuition" id="tuitionlRadio1" value="1"> Ja
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="tuition" id="tuitionlRadio2" value="0"> Nej
-                </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="comments" class="col-sm-2 control-label">Kommentar</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" name="comments" />
-            </div>
-        </div>
-    	<div class="form-group">
-    		<div class="col-sm-2"></div>
-    		<div class="col-sm-4">
-		    	<input class="btn btn-default" type="submit" value="Submit">
-		    </div>
-    	</div>
     </form>
 {% endblock %}

@@ -26,7 +26,7 @@ export default class InputSelect extends Component {
     	if (typeof this.props.onUpdate === 'function') {
     		for (var i=0; i<this.state.listItems.length; i++) {
     			if (this.state.listItems[i][this.props.mapKey] == value) {
-    				this.props.onUpdate(value, this.state.listItems[i][this.props.mapValue]);
+    				this.props.onUpdate(value, this.state.listItems[i][this.props.mapValue], this.props.name);
     				break;
     			}
     		}
