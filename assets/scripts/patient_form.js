@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import DynamicSearch from './dynamic_search.js';
 import InputSelect from './input_select.js';
-import ProcedureForm from './procedure-form.js';
 
 export default class PatientForm extends Component {
 
@@ -34,8 +33,8 @@ export default class PatientForm extends Component {
     	}.bind(this);
 	}
 
-	handleSelectChange(key, value, name) {
-		switch (name) {
+	handleSelectChange(key, value, namespace) {
+		switch (namespace) {
 			case 'age' :
 				if (value !== 'Vuxen') {
 					this.setState({searchFilter : 'ped'});
@@ -75,19 +74,19 @@ export default class PatientForm extends Component {
 				</div>
 				<div className="form-group">
 					<InputSelect 
-						url			=	{ 'api/group/colours/items' } 
+						url			=	{ 'group/colours/items' } 
 						name 		=	{ 'prio' } 
 						onUpdate	=	{ this.handleSelectChange } />
 				</div>
 				<div className="form-group">
 					<InputSelect 
-						url 	 	=	{ '/api/group/ages/items' } 
+						url 	 	=	{ 'group/ages/items' } 
 						name 	 	= 	{ 'age' } 
 						onUpdate 	=	{ this.handleSelectChange } />
 				</div>
 				<div className="form-group">
 					<DynamicSearch 
-						url 		= 	{ '/api/codes' } 
+						url 		= 	{ 'codes' } 
 						mapBadge 	=	{ 'type' } 
 						name 		=	{ 'retts' } 
 						nameDisplay =	{ 'Sökorsak' } 

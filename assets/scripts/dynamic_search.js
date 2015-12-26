@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ApiStore from './stores/api-store.js';
 
 export default class DynamicSearch extends Component {
 
@@ -14,14 +15,27 @@ export default class DynamicSearch extends Component {
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSelect = this.handleSelect.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.filterItems = this.filterItems.bind(this);
 	}
 
 	// Do initial loading
 	componentWillMount() {
-		$.get(this.props.url, function(data) {
-			this.setState({listItems : data.items});
-		}.bind(this));
+		ApiStore.addChangeListener(this.handleStoreChange);
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+		ApiStore.removeChangeListener(this.handleStoreChange);
+	}
+
+	loadData() {
+		var data = ApiStore.get(this.props.url);
+		if (data !== 'loading') {
+			this.setState({
+				listItems : data.items
+			})
+		}
 	}
 
 	filterItems(items) {
@@ -67,6 +81,10 @@ export default class DynamicSearch extends Component {
 				value 			: value
 			});
 		}.bind(this); // bind to component
+	}
+
+	handleStoreChange() {
+		this.loadData();
 	}
 
 	render() {

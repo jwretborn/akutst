@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import ApiStore from './stores/api-store.js';
 
 export default class InputSelect extends Component {
 
@@ -11,10 +11,16 @@ export default class InputSelect extends Component {
 		};
 
 		this.handleSelect = this.handleSelect.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 	}
 
 	componentWillMount() {
-		this.loadData(this.props.url);
+		ApiStore.addChangeListener(this.handleStoreChange);
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+		ApiStore.removeChangeListener(this.handleStoreChange);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -24,9 +30,20 @@ export default class InputSelect extends Component {
 	}
 
 	loadData(url) {
-		$.get(url, function(data) {
-			this.setState({listItems : data.items});
-		}.bind(this));
+		if (url === undefined) {
+			url = this.props.url;
+		}
+		var data = ApiStore.get(url);
+		
+		if (data !== 'loading') {
+			this.setState({
+				listItems : data.items
+			});
+		}
+	}
+
+	handleStoreChange() {
+		this.loadData();
 	}
 
 	handleSelect(event) {

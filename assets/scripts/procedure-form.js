@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DynamicSearch from './dynamic_search.js';
 import InputSelect from './input_select.js';
+import ApiStore from './stores/api-store.js';
 
 export default class ProcedureForm extends Component {
 
@@ -21,26 +22,43 @@ export default class ProcedureForm extends Component {
 		}
 
 		this.handleSelectChange = this.handleSelectChange.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 	}
 
 	componentWillMount() {
-		$.get('/api/proceduretype', function(data) {
+		ApiStore.addChangeListener(this.handleStoreChange);
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+		ApiStore.removeChangeListener(this.handleStoreChange);
+	}
+
+	loadData() {
+		var data = ApiStore.get('proceduretype');
+		if (data !== 'loading') {
 			this.setState({
-				item 		: data.items,
-				procedure 	: data.items[0]
+				items 		: data.items,
+				procedure 	: ( this.state.procedure === false  ? data.items[0] : this.state.procedure )
 			});
-		}.bind(this));
+		}
+	}
+
+	handleStoreChange() {
+		this.loadData();
 	}
 
 	handleSelectChange(key, value, name) {
 		switch (name) {
 			case 'procedure' :
-				// Get the procedure, update methodId
-				$.get('/api/proceduretype/'+key, function(data) {
-					this.setState({
-						procedure 	: data
-					});
-				}.bind(this));
+				for (var i = this.state.items.length - 1; i>=0; i--) {
+					if (this.state.items[i].id == key) {
+						this.setState({
+							procedure : this.state.items[i]
+						});
+						break;
+					}
+				}
 				break;
 			case 'method' :
 				break;
@@ -80,7 +98,7 @@ export default class ProcedureForm extends Component {
 				</div>
 				<div className={ divGrpCls }>
 					<InputSelect 
-						url 	 	=	{ '/api/proceduretype' } 
+						url 	 	=	{ 'proceduretype' } 
 						name 	 	= 	{ 'procedure' }
 						label 		=	{ 'Procedur' } 
 						onUpdate 	=	{ this.handleSelectChange } />
@@ -89,7 +107,7 @@ export default class ProcedureForm extends Component {
 					(
 						<div className="form-group method">
 							<InputSelect
-								url			=	{ '/api/group/'+this.state.procedure.method_group+'/items' } 
+								url			=	{ 'group/'+this.state.procedure.method_group+'/items' } 
 								name 		=	{ 'method' }
 								label 		=	{ 'Metod' }
 								onUpdate 	=	{ this.handleSelectChange } />
@@ -100,7 +118,7 @@ export default class ProcedureForm extends Component {
 					(
 						<div className={ divGrpCls }>
 							<InputSelect
-								url			=	{ '/api/group/'+this.state.procedure.anatomy_group+'/items' }
+								url			=	{ 'group/'+this.state.procedure.anatomy_group+'/items' }
 								name 		= 	{ 'anatomy' }
 								label 		= 	{ 'Lokal' }
 								onUpdate	= 	{ this.handleSelectChange } />
