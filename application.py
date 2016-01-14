@@ -117,7 +117,7 @@ def procedure(id=False):
 	if procedure_type.anatomy_group is not None :
 		anatomy = db.session.query(GroupItem).filter(GroupItem.group_id == p_types[0].anatomy_group)
 	
-	return render_template('form.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
+	return render_template('procedure.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
@@ -160,10 +160,12 @@ def api_retts_codes(id=False):
 
 @app.route('/api/group/<id>/items', methods=['GET'])
 def group_items(id):
-	if isinstance(id, ( int, long) ) :
+	try :
+		val = int(id)
 		query = db.session.query(Group).filter(Group.id == id)
-	else :
+	except ValueError :
 		query = db.session.query(Group).filter(Group.name == id)
+
 	group = query.first()
 	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
 	return jsonify(items=[i.serialize for i in items])
