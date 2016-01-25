@@ -37,7 +37,7 @@ def patients():
 		try :
 			username = form.user_id.data
 			user = db.session.query(User).filter(User.username == username).first()
-			
+
 			if user is None:
 				raise ValueError(u'ID existerar inte')
 
@@ -64,11 +64,11 @@ def patients():
 	levels = []
 	codes = []
 	d = time.strftime("%Y-%m-%d")
-	
+
 	ages = db.session.query(GroupItem).filter(GroupItem.group_id == 27) ### Hack
 	levels = db.session.query(GroupItem).filter(GroupItem.group_id == 26) ### Hack
 	codes = db.session.query(RettsCode).all()
-	
+
 	return render_template("patients.html", date_today=d, ages=ages, levels=levels, codes=codes)
 
 @app.route('/procedurer', methods=['GET', 'POST'])
@@ -116,7 +116,7 @@ def procedure(id=False):
 
 	if procedure_type.anatomy_group is not None :
 		anatomy = db.session.query(GroupItem).filter(GroupItem.group_id == p_types[0].anatomy_group)
-	
+
 	return render_template('form.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
@@ -165,7 +165,10 @@ def group_items(id):
 	else :
 		query = db.session.query(Group).filter(Group.name == id)
 	group = query.first()
-	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
+	try :
+		items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
+	except AttributeError :
+		return jsonify({'items' : []})
 	return jsonify(items=[i.serialize for i in items])
 
 @app.route("/assets/<path:filename>")
