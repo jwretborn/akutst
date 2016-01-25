@@ -21241,6 +21241,7 @@
 						{ className: 'form-group' },
 						_react2['default'].createElement(_input_selectJs2['default'], {
 							url: 'group/colours/items',
+							label: 'Prioritet',
 							name: 'prio',
 							onUpdate: this.handleSelectChange })
 					),
@@ -21249,6 +21250,7 @@
 						{ className: 'form-group' },
 						_react2['default'].createElement(_input_selectJs2['default'], {
 							url: 'group/ages/items',
+							label: 'Ålder',
 							name: 'age',
 							onUpdate: this.handleSelectChange })
 					),
