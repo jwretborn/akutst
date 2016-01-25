@@ -75,12 +75,14 @@ export default class PatientForm extends Component {
 				<div className="form-group">
 					<InputSelect
 						url			=	{ 'group/colours/items' }
+						label 		= 	{ 'Prioritet' }
 						name 		=	{ 'prio' }
 						onUpdate	=	{ this.handleSelectChange } />
 				</div>
 				<div className="form-group">
 					<InputSelect
 						url 	 	=	{ 'group/ages/items' }
+						label 		=	{ 'Ålder' }
 						name 	 	= 	{ 'age' }
 						onUpdate 	=	{ this.handleSelectChange } />
 				</div>
