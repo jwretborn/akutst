@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PatientForm from './patient_form.js';
-import ProcedureForm from './procedure-form.js';
+import PatientForm from './components/patient-form.js';
+import ProcedureForm from './components/procedure-form.js';
 
 if (document.getElementById('patients-react') !== null) {
 	ReactDOM.render(<PatientForm />, document.getElementById('patients-react'));

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import DynamicSearch from './dynamic_search.js';
-import InputSelect from './input_select.js';
-import ApiStore from './stores/api-store.js';
+import DynamicSearch from '../dynamic_search.js';
+import InputSelect from '../input_select.js';
+import ApiStore from '../stores/api-store.js';
 
 export default class ProcedureForm extends Component {
 

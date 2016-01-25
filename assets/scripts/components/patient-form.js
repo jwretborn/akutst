@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import DynamicSearch from './dynamic_search.js';
-import InputSelect from './input_select.js';
+import DynamicSearch from '../dynamic_search.js';
+import InputSelect from '../input_select.js';
 
 export default class PatientForm extends Component {
 
