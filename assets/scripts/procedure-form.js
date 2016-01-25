@@ -21,8 +21,8 @@ export default class ProcedureForm extends Component {
 			procedure 	: false
 		}
 
-		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleStoreChange = this.handleStoreChange.bind(this);
+		this.handleProcedureChange = this.handleProcedureChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -48,11 +48,11 @@ export default class ProcedureForm extends Component {
 		this.loadData();
 	}
 
-	handleSelectChange(key, value, name) {
+	handleProcedureChange(value, name) {
 		switch (name) {
 			case 'procedure' :
 				for (var i = this.state.items.length - 1; i>=0; i--) {
-					if (this.state.items[i].id == key) {
+					if (this.state.items[i].id == value) {
 						this.setState({
 							procedure : this.state.items[i]
 						});
@@ -79,35 +79,35 @@ export default class ProcedureForm extends Component {
 				<div className={ this.props.hidePrefilled === true && this.props.userId !== false ? divGrpCls+" hide" : divGrpCls }>
 					<label htmlFor="id" className={ labelCls }>Användare</label>
 					<div className={ divColCls }>
-						<input 
-							type 		= "user_id" 
-							className 	= "form-control" 
-							name 		= "user_id" 
-							defaultValue= { this.props.userId !== false ? this.props.userId : '' } />
+						<input
+							type 		= "user_id"
+							className 	= "form-control"
+							name 		= "user_id"
+						defaultValue= { this.props.userId !== false ? this.props.userId : '' } />
 					</div>
 				</div>
 				<div className={ this.props.hidePrefilled === true && this.props.date !== false ? divGrpCls+" hide" : divGrpCls }>
 					<label htmlFor="date" className={ labelCls }>Datum</label>
 					<div className={ divColCls }>
-						<input 
-							type 		= "date" 
-							className 	= "form-control" 
-							name 		= "date" 
-							defaultValue= { this.state.date } />
+						<input
+							type 		= "date"
+							className 	= "form-control"
+							name 		= "date"
+						defaultValue= { this.state.date } />
 					</div>
 				</div>
-				<div className={ divGrpCls }>
-					<InputSelect 
-						url 	 	=	{ 'proceduretype' } 
-						name 	 	= 	{ 'procedure' }
-						label 		=	{ 'Procedur' } 
-						onUpdate 	=	{ this.handleSelectChange } />
+				<div className="form-group">
+					<DynamicSearch
+						url 		= 	{ 'proceduretype' }
+						name 		=	{ 'procedure' }
+						nameDisplay =	{ 'Procedur' }
+						changeCallback = { this.handleProcedureChange }/>
 				</div>
 				{ this.state.procedure !== false && this.state.procedure.method_group !== null &&
 					(
 						<div className="form-group method">
 							<InputSelect
-								url			=	{ 'group/'+this.state.procedure.method_group+'/items' } 
+								url			=	{ 'group/'+this.state.procedure.method_group+'/items' }
 								name 		=	{ 'method' }
 								label 		=	{ 'Metod' }
 								onUpdate 	=	{ this.handleSelectChange } />
