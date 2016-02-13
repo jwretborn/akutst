@@ -1,5 +1,7 @@
-from application import db
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+
+db = SQLAlchemy()
 
 """Procedure class"""
 class Procedure(db.Model):
@@ -44,7 +46,7 @@ class Procedure(db.Model):
 		self.comments=comments
 
 	def __repr__(self):
-		return '<id {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 """Procedure Type class"""
 class ProcedureType(db.Model):
@@ -70,7 +72,7 @@ class ProcedureType(db.Model):
 		}
 
 	def __repr__(self):
-		return "<ProcedureType(name=>'%s'" % (self.name)
+		return u'{}'.format(self.name)
 
 """Group class"""
 class Group(db.Model):
@@ -82,7 +84,7 @@ class Group(db.Model):
 	items = db.relationship('GroupItem', backref="group")
 
 	def __repr__(self):
-		return '<id {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 """Group Item class"""
 class GroupItem(db.Model):
@@ -104,7 +106,7 @@ class GroupItem(db.Model):
 		}
 
 	def __repr__(self):
-		return '<id {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 """User class"""
 class User(db.Model):
@@ -115,7 +117,7 @@ class User(db.Model):
 	username = db.Column(db.String(32))
 
 	def __repr__(self):
-		return '<user {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 """Patient class"""
 class Patient(db.Model):
@@ -137,7 +139,7 @@ class Patient(db.Model):
 	retts = db.relationship("RettsCode", foreign_keys=[retts_id])
 
 	def __repr__(self):
-		return '<patient {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 """Retts code class"""
 class RettsCode(db.Model):
@@ -159,7 +161,7 @@ class RettsCode(db.Model):
 		}
 
 	def __repr__(self):
-		return '<RETTS Code {}>'.format(self.id)
+		return u'{}'.format(self.name)
 
 #class Diagnostic(db.Model):
 #	__tablename__ = 'diagnostics'
