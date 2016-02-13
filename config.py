@@ -9,6 +9,14 @@ class Config(object):
     WEBPACK_MANIFEST_PATH = path.join(path.abspath(path.dirname(__file__)), "manifest.json")
     WEBPACK_ASSETS_URL = ''
 
+    SECURITY_URL_PREFIX = "/admin"
+    SECURITY_REGISTERABLE = False
+    SECURITY_CHANGEABLE = True
+    SECURITY_TRACKABLE = True
+    SECURITY_PASSWORD_HASH = "pbkdf2_sha512"
+    SECURITY_PASSWORD_SALT = "ALSKROQJEASDFasddsgfqweASFKQOJDWSFD"
+    SECURITY_SEND_PASSWORD_CHANGE_EMAIL	= False
+
 class ProductionConfig(Config):
     DEBUG = False
 

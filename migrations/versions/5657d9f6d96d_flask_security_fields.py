@@ -23,7 +23,9 @@ def upgrade():
     op.add_column('users', sa.Column('active', sa.Boolean()))
     op.add_column('users', sa.Column('confirmed_at', sa.DateTime()))
     op.add_column('users', sa.Column('last_login_at', sa.DateTime()))
-    op.add_column('users', sa.Column('current_login_at', sa.String(50)))
+    op.add_column('users', sa.Column('current_login_at', sa.DateTime()))
+    op.add_column('users', sa.Column('last_login_ip', sa.String(50)))
+    op.add_column('users', sa.Column('current_login_ip', sa.String(50)))
     op.add_column('users', sa.Column('login_count', sa.String(50)))
 
     # Add Role table #
@@ -33,10 +35,19 @@ def upgrade():
     sa.Column('description', sa.String(length=255)),
     sa.PrimaryKeyConstraint('id')
     )
+
+    op.create_table('roles_users',
+    sa.Column('user_id', sa.Integer, nullable=False),
+    sa.Column('role_id', sa.Integer, nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['role_id'], ['roles.id'], )
+    )
     pass
 
 
 def downgrade():
+    op.drop_table('roles_users')
+
     op.drop_column('users', 'first_name')
     op.drop_column('users', 'last_name')
     op.drop_column('users', 'email')
@@ -45,6 +56,8 @@ def downgrade():
     op.drop_column('users', 'confirmed_at')
     op.drop_column('users', 'last_login_at')
     op.drop_column('users', 'current_login_at')
+    op.drop_column('users', 'last_login_ip')
+    op.drop_column('users', 'current_login_ip')
     op.drop_column('users', 'login_count')
 
     op.drop_table('roles')
