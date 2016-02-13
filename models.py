@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+from flask_security import UserMixin, RoleMixin
 
 db = SQLAlchemy()
 
@@ -108,17 +109,6 @@ class GroupItem(db.Model):
 	def __repr__(self):
 		return u'{}'.format(self.name)
 
-"""User class"""
-class User(db.Model):
-	__tablename__ = 'users'
-
-	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	name = db.Column(db.String(32))
-	username = db.Column(db.String(32))
-
-	def __repr__(self):
-		return u'{}'.format(self.name)
-
 """Patient class"""
 class Patient(db.Model):
 	__tablename__ = 'patients'
@@ -179,3 +169,53 @@ class RettsCode(db.Model):
 #
 #	def __repr__(self):
 #		return '<id {}>'.format(self.id)
+
+# Define models
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('users.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('roles.id'))
+)
+
+class Role(db.Model, RoleMixin):
+	__tablename__ = 'roles'
+
+	id = db.Column(db.Integer(), primary_key=True)
+	name = db.Column(db.String(80), unique=True)
+	description = db.Column(db.String(255))
+
+	def __str__(self):
+		return self.name
+
+"""User class, flask-sequrity"""
+class User(db.Model, UserMixin):
+	__tablename__ = 'users'
+
+    # Default fields for Flask-Security
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	name = db.Column(db.String(32))
+	first_name = db.Column(db.String(255))
+	last_name = db.Column(db.String(255))
+	email = db.Column(db.String(255), unique=True)
+	password = db.Column(db.String(255))
+	active = db.Column(db.Boolean())
+
+	# Extra field
+	username = db.Column(db.String(32))
+
+	## Confirm fields
+	confirmed_at = db.Column(db.DateTime())
+
+	## Trackable fields
+	last_login_at = db.Column(db.DateTime())
+	current_login_at = db.Column(db.DateTime())
+	last_login_ip = db.Column(db.String(50))
+	current_login_ip = db.Column(db.String(50))
+	login_count = db.Column(db.String(50))
+
+	## Roles
+	roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
+
+
+	def __repr__(self):
+		return u'{}'.format(self.name)
