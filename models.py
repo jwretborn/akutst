@@ -193,7 +193,6 @@ class User(db.Model, UserMixin):
 
     # Default fields for Flask-Security
 	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	name = db.Column(db.String(32))
 	first_name = db.Column(db.String(255))
 	last_name = db.Column(db.String(255))
 	email = db.Column(db.String(255), unique=True)
@@ -218,4 +217,4 @@ class User(db.Model, UserMixin):
 
 
 	def __repr__(self):
-		return u'{}'.format(self.name)
+		return u'{}'.format(self.username)
