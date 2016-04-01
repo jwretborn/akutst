@@ -210,7 +210,7 @@ class User(db.Model, UserMixin):
 	current_login_at = db.Column(db.DateTime())
 	last_login_ip = db.Column(db.String(50))
 	current_login_ip = db.Column(db.String(50))
-	login_count = db.Column(db.String(50))
+	login_count = db.Column(db.Integer)
 
 	## Roles
 	roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))

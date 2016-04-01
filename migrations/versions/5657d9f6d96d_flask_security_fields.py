@@ -27,7 +27,6 @@ def upgrade():
     op.add_column('users', sa.Column('last_login_ip', sa.String(50)))
     op.add_column('users', sa.Column('current_login_ip', sa.String(50)))
     op.add_column('users', sa.Column('login_count', sa.String(50)))
-    op.drop_column('users', 'name')
 
     # Add Role table #
     op.create_table('roles',
