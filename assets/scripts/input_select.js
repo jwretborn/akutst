@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import ApiStore from './stores/api-store.js';
 
 export default class InputSelect extends Component {
 
@@ -11,22 +11,49 @@ export default class InputSelect extends Component {
 		};
 
 		this.handleSelect = this.handleSelect.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 	}
 
 	componentWillMount() {
-		$.get(this.props.url, function(data) {
-			this.setState({listItems : data.items});
-		}.bind(this));
+		ApiStore.addChangeListener(this.handleStoreChange);
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+		ApiStore.removeChangeListener(this.handleStoreChange);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.url !== this.props.url) {
+			this.loadData(nextProps.url);
+		}
+	}
+
+	loadData(url) {
+		if (url === undefined) {
+			url = this.props.url;
+		}
+		var data = ApiStore.get(url);
+		
+		if (data !== 'loading') {
+			this.setState({
+				listItems : data.items
+			});
+		}
+	}
+
+	handleStoreChange() {
+		this.loadData();
 	}
 
 	handleSelect(event) {
-		var elem = (typeof event.selectedIndex === "undefined" ? window.event.srcElement : event);
+		var elem = (typeof event.selectedIndex === "undefined" ? event.target : event);
     	var value = elem.value || elem.options[elem.selectedIndex].value;
 
     	if (typeof this.props.onUpdate === 'function') {
     		for (var i=0; i<this.state.listItems.length; i++) {
     			if (this.state.listItems[i][this.props.mapKey] == value) {
-    				this.props.onUpdate(value, this.state.listItems[i][this.props.mapValue]);
+    				this.props.onUpdate(value, this.state.listItems[i][this.props.mapValue], this.props.name);
     				break;
     			}
     		}
@@ -42,7 +69,7 @@ export default class InputSelect extends Component {
 
 		return (
 				 <div className={this.props.name + "form-group"}>
-					<label for={this.props.name} className="col-sm-2 control-label">Ålder</label>
+					<label htmlFor={this.props.name} className="col-sm-2 control-label">{ this.props.label }</label>
 					<div className="col-sm-4">
 					    <select 
 					    	name={this.props.name} 
@@ -50,7 +77,11 @@ export default class InputSelect extends Component {
 					    	onChange={this.handleSelect}>
 					    { items.map(function(item){
 					    	return (
-					            <option value={ item[this.props.mapKey] }>{ item[this.props.mapValue] }</option>
+					            <option 
+					            	key 	= { item.id }
+					            	value 	= { item[this.props.mapKey] } >
+					            	{ item[this.props.mapValue] }
+					            </option>
 					    	);
 					    }.bind(this)) }
 					    </select>
@@ -62,6 +93,7 @@ export default class InputSelect extends Component {
 
 InputSelect.defaultProps = {
 	name 		: '',
+	label 		: 'Select',
 	mapKey 		: 'id',
 	mapValue	: 'name',
 	url			: '',
