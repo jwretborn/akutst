@@ -132,7 +132,7 @@ export default class ProcedureForm extends Component {
 							<input type="radio" name="successful" id="successfullRadio1" value="1" /> Ja
 						</label>
 						<label className="radio-inline">
-							<input type="radio" name="successful" id="successfullRadio2" value="0" /> Nej
+							<input type="radio" name="successful" id="successfullRadio2" value="" /> Nej
 						</label>
 					</div>
 				</div>
@@ -143,7 +143,7 @@ export default class ProcedureForm extends Component {
 							<input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
 						</label>
 						<label className="radio-inline">
-							<input type="radio" name="tuition" id="tuitionlRadio2" value="0" /> Nej
+							<input type="radio" name="tuition" id="tuitionlRadio2" value="" /> Nej
 						</label>
 					</div>
 				</div>
