@@ -19,6 +19,7 @@ class Procedure(db.Model):
 	comments = db.Column(db.String(400), nullable=True)
 
 	user = db.relationship("User", foreign_keys=[user_id])
+	procedure = db.relationship("ProcedureType", foreign_keys=[procedure_type])
 	method = db.relationship("GroupItem", foreign_keys=[method_id])
 	anatomy = db.relationship("GroupItem", foreign_keys=[anatomy_id])
 

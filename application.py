@@ -13,7 +13,7 @@ from flask_webpack import Webpack
 from flask_admin import Admin
 from flask_admin import helpers as admin_helpers
 from flask_admin.contrib.sqla import ModelView
-from modules.admin.modelview import MyModelView
+from modules.admin.modelview import MyModelView, PatientModelView, ProcedureModelView, RettsCodeModelView, UserModelView
 
 from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
 from forms import ProcedureForm, PatientForm
@@ -46,13 +46,13 @@ def security_context_processor():
 
 # Setup Flask-admin
 admin = Admin(app, name='akutst', template_mode='bootstrap3')
-admin.add_view(MyModelView(Patient, db.session))
-admin.add_view(MyModelView(Procedure, db.session))
+admin.add_view(PatientModelView(Patient, db.session))
+admin.add_view(ProcedureModelView(Procedure, db.session))
 admin.add_view(MyModelView(ProcedureType, db.session))
-admin.add_view(MyModelView(RettsCode, db.session))
+admin.add_view(RettsCodeModelView(RettsCode, db.session))
 admin.add_view(MyModelView(Group, db.session))
 admin.add_view(MyModelView(GroupItem, db.session))
-admin.add_view(MyModelView(User, db.session))
+admin.add_view(UserModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
 
 @app.route("/")
