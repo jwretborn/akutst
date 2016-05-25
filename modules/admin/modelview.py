@@ -64,7 +64,7 @@ class PatientModelView(MyModelView):
 
 class ProcedureModelView(MyModelView):
 	column_searchable_list = ['comments']
-	column_filters = ['user.username', 'procedure']
+	column_filters = ['user.username', 'procedure.name']
 	can_export = True
 
 	column_select_related_list = ['user', 'procedure']

@@ -14,6 +14,7 @@ from flask_admin import Admin
 from flask_admin import helpers as admin_helpers
 from flask_admin.contrib.sqla import ModelView
 from modules.admin.modelview import MyModelView, PatientModelView, ProcedureModelView, RettsCodeModelView, UserModelView
+from modules.admin.view import AnalyticsView
 
 from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
 from forms import ProcedureForm, PatientForm
@@ -54,6 +55,7 @@ admin.add_view(MyModelView(Group, db.session))
 admin.add_view(MyModelView(GroupItem, db.session))
 admin.add_view(UserModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
+admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 
 @app.route("/")
 def index():
