@@ -205,6 +205,24 @@ def group_items(id):
 	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
 	return jsonify(items=[i.serialize for i in items])
 
+@app.route('/api/diagnostics/procedures', methods=['GET'])
+@login_required
+def diagnostic_procedures():
+    query = db.session.query(Procedure).filter(Procedure.user_id == current_user.id).all()
+    return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/patients', methods=['GET'])
+@login_required
+def diagnostic_patients():
+    query = db.session.query(Patient).filter(Patient.user_id == current_user.id).all()
+    return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/user', methods=['GET'])
+@login_required
+def user_join_time():
+    user = db.session.query(User).get(current_user.id)
+    return jsonify(user.serialize)
+
 @app.route("/assets/<path:filename>")
 def send_asset(filename):
     return send_from_directory(path.join(here, "public"), filename)

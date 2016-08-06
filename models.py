@@ -216,6 +216,16 @@ class User(db.Model, UserMixin):
 	## Roles
 	roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'first_name'	: self.first_name,
+			'last_name'		: self.last_name,
+			'email'			: self.email,
+			'username'		: self.username,
+			'confirmed_at'	: self.confirmed_at
+		}
 
 	def __repr__(self):
 		return u'{}'.format(self.username)

@@ -1,4 +1,12 @@
 {% extends 'admin/master.html' %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.2-dist/css/bootstrap.min.css') }}">
+    {{ stylesheet_tag("main_css") | safe }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+{% endblock %}
 {% block body %}
-  <p>Here I'm going to display some data.</p>
+
+  <div id="diagnostic-procedure-list"></div>
+
+  {{ javascript_tag("app_js") | safe }}
 {% endblock %}
