@@ -1,0 +1,11 @@
+body {
+  font-family: Helvetica, Arial, sans;
+  color: #222; }
+
+.clickable {
+  cursor: pointer; }
+
+.dynamic-search ul {
+  position: absolute;
+  width: 300px;
+  margin-left: 400px; }
