@@ -14,6 +14,7 @@ from flask_admin import Admin
 from flask_admin import helpers as admin_helpers
 from flask_admin.contrib.sqla import ModelView
 from modules.admin.modelview import MyModelView, PatientModelView, ProcedureModelView, RettsCodeModelView, UserModelView
+from modules.admin.view import AnalyticsView
 
 from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
 from forms import ProcedureForm, PatientForm
@@ -54,6 +55,7 @@ admin.add_view(MyModelView(Group, db.session))
 admin.add_view(MyModelView(GroupItem, db.session))
 admin.add_view(UserModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
+admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 
 @app.route("/")
 def index():
@@ -202,6 +204,24 @@ def group_items(id):
 	group = query.first()
 	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
 	return jsonify(items=[i.serialize for i in items])
+
+@app.route('/api/diagnostics/procedures', methods=['GET'])
+@login_required
+def diagnostic_procedures():
+    query = db.session.query(Procedure).filter(Procedure.user_id == current_user.id).all()
+    return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/patients', methods=['GET'])
+@login_required
+def diagnostic_patients():
+	query = db.session.query(Patient).filter(Patient.user_id == current_user.id).all()
+	return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/user', methods=['GET'])
+@login_required
+def user_join_time():
+    user = db.session.query(User).get(current_user.id)
+    return jsonify(user.serialize)
 
 @app.route("/assets/<path:filename>")
 def send_asset(filename):
