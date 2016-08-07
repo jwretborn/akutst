@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import DynamicSearch from '../dynamic_search.js';
 import InputSelect from '../input_select.js';
 
+import ApiActions from '../actions/api-actions.js';
+import ApiConstants from '../constants/api-constants.js';
+import ApiStore from '../stores/api-store.js';
+
 export default class PatientForm extends Component {
 
 	constructor(props) {
@@ -16,10 +20,23 @@ export default class PatientForm extends Component {
 
 		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleFieldChange = this.handleFieldChange.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 	}
 
 	componentWillMount() {
+		ApiStore.addChangeListener(this.handleStoreChange);
 
+		this.loadStoreData();
+	}
+
+	loadStoreData() {
+		var user = ApiStore.get('diagnostics/user');
+
+		if (user != false) {
+			this.setState({
+				user_id : user['username']
+			});
+		}
 	}
 
 	handleFieldChange(field) {
@@ -48,6 +65,10 @@ export default class PatientForm extends Component {
 		}
 	}
 
+	handleStoreChange() {
+		this.loadStoreData();
+	}
+
 	render() {
 		return (
 			<div>
@@ -58,7 +79,8 @@ export default class PatientForm extends Component {
 							type 		=	"text"
 							className 	=	"form-control"
 							name 		=	"user_id"
-							onBlur		=	{ this.handleFieldChange('user_id') } />
+							value		=	{ this.state.user_id }
+							onChange	=	{ this.handleFieldChange('user_id') } />
 					</div>
 				</div>
 				<div className="form-group">

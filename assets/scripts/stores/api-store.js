@@ -1,12 +1,13 @@
 import AjaxResource from '../utils/ajax-resource.js';
 import AppDispatcher from '../dispatchers/app-dispatcher.js';
 import { EventEmitter } from 'events'
+import ApiConstants from '../constants/api-constants.js';
 
 var CHANGE_EVENT = 'change';
 
 class ApiStoreClass extends EventEmitter {
-	
-	constructor(urlPattern) {		
+
+	constructor(urlPattern) {
 		super();
 
 		if (urlPattern === undefined) {
@@ -30,7 +31,7 @@ class ApiStoreClass extends EventEmitter {
 
 	updateFromServer(response) {
 		AppDispatcher.dispatch({
-			type : 'DATA_FROM_SERVER',
+			type : ApiConstants.DATA_FROM_SERVER,
 			payload : response
 		});
 	}
@@ -94,8 +95,12 @@ const ApiStore = new ApiStoreClass();
 
 AppDispatcher.register((action) => {
 	switch(action.type) {
-		case 'DATA_FROM_SERVER' :
+		case ApiConstants.DATA_FROM_SERVER :
 			ApiStore.handleDataFromServer(action);
+			ApiStore.emitChange();
+			break;
+		case ApiConstants.GET_REQUEST :
+			ApiStore.get(action.payload);
 			ApiStore.emitChange();
 			break;
 		default :
