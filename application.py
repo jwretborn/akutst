@@ -5,7 +5,7 @@ import json
 from os import environ, path
 from flask import Flask, request, redirect, url_for, flash, jsonify
 from flask import render_template, send_from_directory
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required, current_user
 from flask_security.utils import encrypt_password
 from flask_webpack import Webpack
