@@ -214,8 +214,8 @@ def diagnostic_procedures():
 @app.route('/api/diagnostics/patients', methods=['GET'])
 @login_required
 def diagnostic_patients():
-    query = db.session.query(Patient).filter(Patient.user_id == current_user.id).all()
-    return jsonify(items=[i.serialize for i in query])
+	query = db.session.query(Patient).filter(Patient.user_id == current_user.id).all()
+	return jsonify(items=[i.serialize for i in query])
 
 @app.route('/api/diagnostics/user', methods=['GET'])
 @login_required

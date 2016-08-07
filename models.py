@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import JSON
 from flask_security import UserMixin, RoleMixin
 
 db = SQLAlchemy()
@@ -34,7 +33,8 @@ class Procedure(db.Model):
 			'tuition'			: self.tuition,
 			'created'			: str(self.created),
 			'successful'		: self.successful,
-			'comments'			: self.comments
+			'comments'			: self.comments,
+			'name'				: str(self.procedure)
 		}
 
 	def __init__(self, user_id, type, method, anatomy, tuition, created, successful, comments):
@@ -48,7 +48,7 @@ class Procedure(db.Model):
 		self.comments=comments
 
 	def __repr__(self):
-		return u'{}'.format(self.name)
+		return u'{}'.format(self.procedure.name)
 
 """Procedure Type class"""
 class ProcedureType(db.Model):
@@ -108,7 +108,7 @@ class GroupItem(db.Model):
 		}
 
 	def __repr__(self):
-		return u'{}'.format(self.name)
+		return self.name.encode("utf-8")
 
 """Patient class"""
 class Patient(db.Model):
@@ -129,8 +129,28 @@ class Patient(db.Model):
 	triage = db.relationship("GroupItem", foreign_keys=[triage_id])
 	retts = db.relationship("RettsCode", foreign_keys=[retts_id])
 
+	@property
+	def serialize(self):
+		"""Return object data in easily serializeable format"""
+		return {
+			'id'				: self.id,
+			'name'				: '{}, {}'.format(self.age, self.retts),
+			'admittance'		: self.admittance,
+			'tuition'			: self.tuition,
+			'created'			: str(self.created),
+			'user'				: str(self.user),
+			'triage'			: str(self.triage),
+			'retts'				: str(self.retts),
+			'age'				: str(self.age),
+			'comments'			: self.comments
+		}
+
+
 	def __repr__(self):
-		return u'{}'.format(self.name)
+		return self.retts
+
+	def __str__(self):
+		return str(self.retts)
 
 """Retts code class"""
 class RettsCode(db.Model):
@@ -152,7 +172,7 @@ class RettsCode(db.Model):
 		}
 
 	def __repr__(self):
-		return u'{}'.format(self.name)
+		return self.name.encode("utf-8")
 
 #class Diagnostic(db.Model):
 #	__tablename__ = 'diagnostics'
