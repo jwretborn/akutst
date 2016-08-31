@@ -98,20 +98,12 @@ export default class PatientForm extends Component {
 						onUpdate 	=	{ this.handleSelectChange } />
 				</div>
 				<div className="form-group">
-					<DynamicSearch
-						url 		= 	{ 'codes' }
-						mapBadge 	=	{ 'type' }
-						name 		=	{ 'retts' }
-						nameDisplay =	{ 'Sökorsak' }
-						filterKey 	=	{ 'type' }
-						filterValue =	{ this.state.searchFilter } />
-				</div>
-				<div className="form-group">
 					<TokenSearch
 						url 		= 	{ 'codes' }
 						mapBadge 	=	{ 'type' }
 						name 		=	{ 'retts' }
 						nameDisplay =	{ 'Sökorsak' }
+						singleValue =	{ true }
 						filterKey 	=	{ 'type' }
 						filterValue =	{ this.state.searchFilter } />
 				</div>

@@ -229,29 +229,30 @@ export default class TokenSearch extends Component {
 
 		return (
 			<div
-                className="token-search form-group"
-                onKeyUp= {this.handleKeyEvent}>
-                <label htmlFor="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
-                <div className="input-area col-sm-6">
-                { selected.map(function(item) {
-                return (
-                    <div className="token">
-                        <div className="token-name">
-                        {item.name}
-                        </div>
-                        <div
-                            className="token-close"
-                            onClick= { this.handleDeleteToken(item.id)}>
-                            x
-                        </div>
-                    </div>)
-                    }.bind(this)) }
-                    <input
-                        type 		= "text"
-                        ref         = "tokenInput"
-                        className 	= "token-input"
-                        value 		= { searchString }
-                        onChange 	= { this.handleChange }
+				className="token-search form-group"
+				onKeyUp= {this.handleKeyEvent}>
+				<label htmlFor="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
+				<div className="input-area col-sm-6">
+				{ selected.map(function(item) {
+				return (
+					<div className="token">
+						<div className="token-name">
+						{item.name}
+						</div>
+						<div
+							className="token-close"
+							onClick= { this.handleDeleteToken(item.id)}>
+							x
+						</div>
+					</div>)
+					}.bind(this)) }
+					<input
+						type 		= "text"
+						ref         = "tokenInput"
+						className 	= "token-input"
+						value 		= { searchString }
+						onChange 	= { this.handleChange }
+						disabled	= { this.props.singleValue && selected.length > 0 }
                         placeholder = "Search" />
 
                     <input
@@ -285,6 +286,7 @@ TokenSearch.defaultProps = {
 	mapKey			: 'id',
 	name 			: 'dynamic-search',
 	nameDisplay		: 'Search',
+	singleValue		: false,
 	filterKey		: '',
 	filterValue		: '',
 	url				: '',
