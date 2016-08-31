@@ -5,22 +5,57 @@ import json
 from os import environ, path
 from flask import Flask, request, redirect, url_for, flash, jsonify
 from flask import render_template, send_from_directory
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from flask_security import Security, SQLAlchemyUserDatastore, login_required, current_user
+from flask_security.utils import encrypt_password
 from flask_webpack import Webpack
 
+from flask_admin import Admin
+from flask_admin import helpers as admin_helpers
+from flask_admin.contrib.sqla import ModelView
+from modules.admin.modelview import MyModelView, PatientModelView, ProcedureModelView, RettsCodeModelView, UserModelView
+from modules.admin.view import AnalyticsView
+
+from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
+from forms import ProcedureForm, PatientForm
 
 app = Flask(__name__)
 
+# Setup
 here = path.dirname(path.realpath(__file__))
 app.config.from_object(environ['APP_SETTINGS'])
 debug = "DEBUG" in environ
-db = SQLAlchemy(app)
+db.init_app(app)
 
+# Setup Flask-Webpack
 webpack = Webpack()
 webpack.init_app(app)
 
-from models import *
-from forms import ProcedureForm, PatientForm
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
+# define a context processor for merging flask-admin's template context into the
+# flask-security views.
+@security.context_processor
+def security_context_processor():
+    return dict(
+        admin_base_template=admin.base_template,
+        admin_view=admin.index_view,
+        h=admin_helpers,
+    )
+
+# Setup Flask-admin
+admin = Admin(app, name='akutst', template_mode='bootstrap3')
+admin.add_view(PatientModelView(Patient, db.session))
+admin.add_view(ProcedureModelView(Procedure, db.session))
+admin.add_view(MyModelView(ProcedureType, db.session))
+admin.add_view(RettsCodeModelView(RettsCode, db.session))
+admin.add_view(MyModelView(Group, db.session))
+admin.add_view(MyModelView(GroupItem, db.session))
+admin.add_view(UserModelView(User, db.session))
+admin.add_view(MyModelView(Role, db.session))
+admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 
 @app.route("/")
 def index():
@@ -117,7 +152,7 @@ def procedure(id=False):
 	if procedure_type.anatomy_group is not None :
 		anatomy = db.session.query(GroupItem).filter(GroupItem.group_id == p_types[0].anatomy_group)
 
-	return render_template('form.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
+	return render_template('procedure.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
@@ -160,16 +195,36 @@ def api_retts_codes(id=False):
 
 @app.route('/api/group/<id>/items', methods=['GET'])
 def group_items(id):
-	if isinstance(id, ( int, long) ) :
+	try :
+		val = int(id)
 		query = db.session.query(Group).filter(Group.id == id)
-	else :
+	except ValueError :
 		query = db.session.query(Group).filter(Group.name == id)
+
 	group = query.first()
 	try :
 		items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
 	except AttributeError :
 		return jsonify({'items' : []})
 	return jsonify(items=[i.serialize for i in items])
+
+@app.route('/api/diagnostics/procedures', methods=['GET'])
+@login_required
+def diagnostic_procedures():
+    query = db.session.query(Procedure).filter(Procedure.user_id == current_user.id).all()
+    return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/patients', methods=['GET'])
+@login_required
+def diagnostic_patients():
+	query = db.session.query(Patient).filter(Patient.user_id == current_user.id).all()
+	return jsonify(items=[i.serialize for i in query])
+
+@app.route('/api/diagnostics/user', methods=['GET'])
+@login_required
+def user_join_time():
+    user = db.session.query(User).get(current_user.id)
+    return jsonify(user.serialize)
 
 @app.route("/assets/<path:filename>")
 def send_asset(filename):

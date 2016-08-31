@@ -2,9 +2,9 @@
 <html>
     <head>
         {% block head %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.2-dist/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         {{ stylesheet_tag("main_css") | safe }}
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %} - My Webpage</title>
@@ -50,52 +50,6 @@
                 {% endblock %}
             </div>
         </div>
-        <script>
-            $('select[name="procedure"]').change(function() {
-                // fetch procedure
-                var id = $(this).val();
-
-                $.getJSON("/api/proceduretype/"+id, function(data) {
-                    
-                    if (data.method_group !== null) {
-                        $('.form-group.method').show();
-                        $.getJSON("/api/group/"+data.method_group+"/items", function(data) {
-                            var items = []
-                            $.each(data.items, function(key, val) {
-                                items.push('<option value="'+val.id+'">'+val.name+'</option>');
-                            });
-                            $('select[name="method"]').html(items.join(""))
-                        });
-                    }
-                    else {
-                        $('.form-group.method').hide();
-                        $('select[name="method"]').html('');
-                    }
-
-                    if (data.anatomy_group !== null) {
-                        $('.form-group.anatomy').show();
-                        $.getJSON("/api/group/"+data.anatomy_group+"/items", function(data) {
-                            var items = []
-                            $.each(data.items, function(key, val) {
-                                items.push('<option value="'+val.id+'">'+val.name+'</option>');
-                            });
-                            $('select[name="anatomy"]').html(items.join(""))
-                        });
-                    }
-                    else {
-                        $('.form-group.anatomy').hide();
-                        $('select[name="anatomy"]').html('');
-                    }
-
-                    if (data.show_success !== null && data.show_success !== false) {
-                        $('.form-group.successful').show();
-                    }
-                    else {
-                        $('.form-group.successful').hide();
-                    }
-                });
-            });
-        </script>
         {{ javascript_tag("app_js") | safe }}
     </body>
 </html>

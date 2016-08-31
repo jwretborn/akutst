@@ -1,27 +1,41 @@
 import React, { Component } from 'react';
+import ApiStore from './stores/api-store.js';
 
 export default class DynamicSearch extends Component {
 
 	// Constructor
 	constructor(props) {
 		super(props);
-		this.state = { 
-			searchString	: '', 
-			display			: 'hide', 
+		this.state = {
+			searchString	: '',
+			display			: 'hide',
 			listItems		: [],
 			value 			: ''
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSelect = this.handleSelect.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.filterItems = this.filterItems.bind(this);
 	}
 
 	// Do initial loading
 	componentWillMount() {
-		$.get(this.props.url, function(data) {
-			this.setState({listItems : data.items});
-		}.bind(this));
+		ApiStore.addChangeListener(this.handleStoreChange);
+		this.loadData();
+	}
+
+	componentWillUnmount() {
+		ApiStore.removeChangeListener(this.handleStoreChange);
+	}
+
+	loadData() {
+		var data = ApiStore.get(this.props.url);
+		if (data !== 'loading') {
+			this.setState({
+				listItems : data.items
+			})
+		}
 	}
 
 	filterItems(items) {
@@ -62,11 +76,18 @@ export default class DynamicSearch extends Component {
 		// Will set the search item and close the list
 		return function(event) {
 			this.setState({
-				searchString	: name, 
+				searchString	: name,
 				display			: 'hide',
 				value 			: value
 			});
+			if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+				this.props.changeCallback(value, this.props.name);
+			}
 		}.bind(this); // bind to component
+	}
+
+	handleStoreChange() {
+		this.loadData();
 	}
 
 	render() {
@@ -83,26 +104,30 @@ export default class DynamicSearch extends Component {
 
 		return (
 			<div className="dynamic-search">
-				<label for="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
+				<label htmlFor="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
 				<div className="col-sm-4">
-                	<input 
-                		type="text" 
-                		className="form-control" 
-                		value={searchString} 
-                		onChange={this.handleChange} 
-                		placeholder="Search" />
+                	<input
+                		type 		= "text"
+                		className 	= "form-control"
+                		value 		= { searchString }
+                		onChange 	= { this.handleChange }
+                		placeholder = "Search" />
 
-                	<input type="hidden" name={this.props.name} value={value} />
+                	<input
+                		type 		= "hidden"
+                		name 		= { this.props.name }
+                		value 		= { value } />
 				</div>
 				<ul className={this.state.display + " list-group col-sm-6"}>
-        			{ codes.map(function(code){ 
+        			{ codes.map(function(code){
         				return (
-        					<li 
-        						className="list-group-item clickable" 
-        						value={code[this.props.mapKey]} 
-        						onClick={this.handleSelect(code[this.props.mapValue], code[this.props.mapKey])}>
-        						<span className="badge">{code[this.props.mapBadge]}</span>{code[this.props.mapValue]} 
-        					</li> 
+        					<li
+        						key 		= { code.id }
+        						className 	= "list-group-item clickable"
+        						value 		= { code[this.props.mapKey] }
+        						onClick 	= { this.handleSelect(code[this.props.mapValue], code[this.props.mapKey]) } >
+        						<span className="badge">{code[this.props.mapBadge]}</span>{code[this.props.mapValue]}
+        					</li>
         				);
         			}.bind(this)) }
         		</ul>
@@ -119,5 +144,6 @@ DynamicSearch.defaultProps = {
 	nameDisplay		: 'Search',
 	filterKey		: '',
 	filterValue		: '',
-	url				: ''
+	url				: '',
+	changeCallback	: false
 }
