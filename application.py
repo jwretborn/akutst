@@ -53,6 +53,7 @@ def security_context_processor():
 
 # Setup Flask-admin
 admin = Admin(app, name='akutst', template_mode='bootstrap3')
+admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 admin.add_view(PatientModelView(Patient, db.session))
 admin.add_view(ProcedureModelView(Procedure, db.session))
 admin.add_view(MyModelView(ProcedureType, db.session))
@@ -61,7 +62,6 @@ admin.add_view(MyModelView(Group, db.session))
 admin.add_view(MyModelView(GroupItem, db.session))
 admin.add_view(UserModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
-admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 
 @app.route("/")
 def index():

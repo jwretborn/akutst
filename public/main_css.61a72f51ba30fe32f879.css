@@ -29,7 +29,8 @@ body {
   flex-grow: 1;
   display: inline-block;
   font-size: 13px;
-  min-height: 25px; }
+  min-height: 25px;
+  padding-left: 5px; }
 
 .token-search .input-area .token {
   -webkit-border-radius: 2px;
