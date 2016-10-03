@@ -6,6 +6,8 @@ import ApiActions from '../actions/api-actions.js';
 import ApiConstants from '../constants/api-constants.js';
 import ApiStore from '../stores/api-store.js';
 
+import TokenSearch from './token-search.js';
+
 export default class PatientForm extends Component {
 
 	constructor(props) {
@@ -21,6 +23,7 @@ export default class PatientForm extends Component {
 		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleFieldChange = this.handleFieldChange.bind(this);
 		this.handleStoreChange = this.handleStoreChange.bind(this);
+		this.handleKeyEvent = this.handleKeyEvent.bind(this);
 	}
 
 	componentWillMount() {
@@ -67,11 +70,20 @@ export default class PatientForm extends Component {
 
 	handleStoreChange() {
 		this.loadStoreData();
+
+	}
+
+	// Event handler
+	handleKeyEvent(event) {
+		// We do not want to submit on enter
+		if (event.key == 'Enter') {
+			event.preventDefault();
+		}
 	}
 
 	render() {
 		return (
-			<div>
+			<div onKeyDown={this.handleKeyEvent}>
 				<div className="form-group">
 					<label htmlFor="id" className="col-sm-2 control-label">Användare</label>
 					<div className="col-sm-4">
@@ -109,11 +121,12 @@ export default class PatientForm extends Component {
 						onUpdate 	=	{ this.handleSelectChange } />
 				</div>
 				<div className="form-group">
-					<DynamicSearch
+					<TokenSearch
 						url 		= 	{ 'codes' }
 						mapBadge 	=	{ 'type' }
 						name 		=	{ 'retts' }
 						nameDisplay =	{ 'Sökorsak' }
+						singleValue =	{ true }
 						filterKey 	=	{ 'type' }
 						filterValue =	{ this.state.searchFilter } />
 				</div>

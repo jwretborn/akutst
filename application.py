@@ -19,6 +19,11 @@ from modules.admin.view import AnalyticsView
 from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
 from forms import ProcedureForm, PatientForm
 
+# Fix ascii jinja2-error
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 app = Flask(__name__)
 
 # Setup
@@ -43,6 +48,7 @@ def security_context_processor():
         admin_base_template=admin.base_template,
         admin_view=admin.index_view,
         h=admin_helpers,
+        get_url=url_for
     )
 
 # Setup Flask-admin
