@@ -146,6 +146,8 @@ export default class PatientForm extends Component {
 					</div>
 				</div>
 				<div className="form-group">
+				</div>
+				<div className="form-group">
 					<div className="col-sm-2"></div>
 					<div className="col-sm-4">
 						<input className="btn btn-default" type="submit" value="Submit" />

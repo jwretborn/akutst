@@ -34,7 +34,7 @@ export default class InputSelect extends Component {
 			url = this.props.url;
 		}
 		var data = ApiStore.get(url);
-		
+
 		if (data !== 'loading') {
 			this.setState({
 				listItems : data.items
@@ -71,13 +71,13 @@ export default class InputSelect extends Component {
 				 <div className={this.props.name + "form-group"}>
 					<label htmlFor={this.props.name} className="col-sm-2 control-label">{ this.props.label }</label>
 					<div className="col-sm-4">
-					    <select 
-					    	name={this.props.name} 
-					    	className="form-control" 
+					    <select
+					    	name={this.props.name}
+					    	className="form-control"
 					    	onChange={this.handleSelect}>
 					    { items.map(function(item){
 					    	return (
-					            <option 
+					            <option
 					            	key 	= { item.id }
 					            	value 	= { item[this.props.mapKey] } >
 					            	{ item[this.props.mapValue] }
