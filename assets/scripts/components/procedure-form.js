@@ -3,6 +3,8 @@ import DynamicSearch from '../dynamic_search.js';
 import InputSelect from '../input_select.js';
 import ApiStore from '../stores/api-store.js';
 
+import TokenSearch from './token-search.js';
+
 export default class ProcedureForm extends Component {
 
 	constructor(props) {
@@ -18,11 +20,13 @@ export default class ProcedureForm extends Component {
 		this.state = {
 			date 		: date,
 			items		: false,
-			procedure 	: false
+			procedure 	: false,
+			searchFilter: ''
 		}
 
 		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.handleProcedureChange = this.handleProcedureChange.bind(this);
+		this.handleKeyEvent = this.handleKeyEvent.bind(this);
 	}
 
 	componentWillMount() {
@@ -69,13 +73,21 @@ export default class ProcedureForm extends Component {
 		}
 	}
 
+	// Event handler
+	handleKeyEvent(event) {
+		// We do not want to submit on enter
+		if (event.key == 'Enter') {
+			event.preventDefault();
+		}
+	}
+
 	render() {
 		var divGrpCls = 'form-group',
 			labelCls = "col-sm-2 control-label",
 			divColCls = "col-sm-4";
 
 		return (
-			<div>
+			<div onKeyDown={this.handleKeyEvent}>
 				<div className={ this.props.hidePrefilled === true && this.props.userId !== false ? divGrpCls+" hide" : divGrpCls }>
 					<label htmlFor="id" className={ labelCls }>Användare</label>
 					<div className={ divColCls }>
@@ -97,11 +109,12 @@ export default class ProcedureForm extends Component {
 					</div>
 				</div>
 				<div className="form-group">
-					<DynamicSearch
+					<TokenSearch
 						url 		= 	{ 'proceduretype' }
 						name 		=	{ 'procedure' }
 						nameDisplay =	{ 'Procedur' }
-						changeCallback = { this.handleProcedureChange }/>
+						singleValue =	{ true }
+						changeCallback ={ this.handleProcedureChange }/>
 				</div>
 				{ this.state.procedure !== false && this.state.procedure.method_group !== null &&
 					(

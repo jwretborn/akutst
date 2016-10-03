@@ -53,6 +53,7 @@ def security_context_processor():
 
 # Setup Flask-admin
 admin = Admin(app, name='akutst', template_mode='bootstrap3')
+admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 admin.add_view(PatientModelView(Patient, db.session))
 admin.add_view(ProcedureModelView(Procedure, db.session))
 admin.add_view(MyModelView(ProcedureType, db.session))
@@ -61,7 +62,6 @@ admin.add_view(MyModelView(Group, db.session))
 admin.add_view(MyModelView(GroupItem, db.session))
 admin.add_view(UserModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
-admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
 
 @app.route("/")
 def index():
@@ -100,17 +100,7 @@ def patients():
 	else :
 		flash_form_errors(form)
 
-
-	ages = []
-	levels = []
-	codes = []
-	d = time.strftime("%Y-%m-%d")
-
-	ages = db.session.query(GroupItem).filter(GroupItem.group_id == 27) ### Hack
-	levels = db.session.query(GroupItem).filter(GroupItem.group_id == 26) ### Hack
-	codes = db.session.query(RettsCode).all()
-
-	return render_template("patients.html", date_today=d, ages=ages, levels=levels, codes=codes)
+	return render_template("patients.html")
 
 @app.route('/procedurer', methods=['GET', 'POST'])
 @app.route('/procedurer/<id>', methods=['GET', 'POST'])
@@ -145,20 +135,7 @@ def procedure(id=False):
 	else :
 		flash_form_errors(form)
 
-	d = time.strftime("%Y-%m-%d")
-	p_types = db.session.query(ProcedureType).all()
-	procedure_type = p_types[0]
-
-	methods = []
-	anatomy = []
-
-	if procedure_type.method_group is not None :
-		methods = db.session.query(GroupItem).filter(GroupItem.group_id == procedure_type.method_group)
-
-	if procedure_type.anatomy_group is not None :
-		anatomy = db.session.query(GroupItem).filter(GroupItem.group_id == p_types[0].anatomy_group)
-
-	return render_template('procedure.html', date_today=d, p_type=procedure_type, procedures=p_types, methods=methods, anatomys=anatomy)
+	return render_template('procedure.html')
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():

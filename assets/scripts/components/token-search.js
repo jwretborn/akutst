@@ -140,11 +140,12 @@ export default class TokenSearch extends Component {
         return function(event) {
             // Remove value
             var selected = this.state.selectedItems.filter((x) => x.id !== id);
+			var value = _.pluck(selected, 'id').toString();
 
             // Update state
             this.setState({
                 'selectedItems' : selected,
-                'value' : _.pluck(selected, 'id').toString()
+                'value' : value
             });
 
             // Check if we have a callback function to run
@@ -233,9 +234,11 @@ export default class TokenSearch extends Component {
 				onKeyUp= {this.handleKeyEvent}>
 				<label htmlFor="retts" className="col-sm-2 control-label">{this.props.nameDisplay}</label>
 				<div className="input-area col-sm-6">
-				{ selected.map(function(item) {
-				return (
-					<div className="token">
+					{ selected.map(function(item) {
+						return (
+					<div
+						key 		= { item.id }
+						className 	= "token">
 						<div className="token-name">
 						{item.name}
 						</div>

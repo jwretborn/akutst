@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import DynamicSearch from '../dynamic_search.js';
 import InputSelect from '../input_select.js';
 
+import ApiActions from '../actions/api-actions.js';
+import ApiConstants from '../constants/api-constants.js';
+import ApiStore from '../stores/api-store.js';
+
 import TokenSearch from './token-search.js';
 
 export default class PatientForm extends Component {
@@ -18,11 +22,24 @@ export default class PatientForm extends Component {
 
 		this.handleSelectChange = this.handleSelectChange.bind(this);
 		this.handleFieldChange = this.handleFieldChange.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.handleKeyEvent = this.handleKeyEvent.bind(this);
 	}
 
 	componentWillMount() {
+		ApiStore.addChangeListener(this.handleStoreChange);
 
+		this.loadStoreData();
+	}
+
+	loadStoreData() {
+		var user = ApiStore.get('diagnostics/user');
+
+		if (user != false) {
+			this.setState({
+				user_id : user['username']
+			});
+		}
 	}
 
 	handleFieldChange(field) {
@@ -51,6 +68,11 @@ export default class PatientForm extends Component {
 		}
 	}
 
+	handleStoreChange() {
+		this.loadStoreData();
+
+	}
+
 	// Event handler
 	handleKeyEvent(event) {
 		// We do not want to submit on enter
@@ -69,7 +91,8 @@ export default class PatientForm extends Component {
 							type 		=	"text"
 							className 	=	"form-control"
 							name 		=	"user_id"
-							onBlur		=	{ this.handleFieldChange('user_id') } />
+							value		=	{ this.state.user_id }
+							onChange	=	{ this.handleFieldChange('user_id') } />
 					</div>
 				</div>
 				<div className="form-group">
@@ -134,6 +157,8 @@ export default class PatientForm extends Component {
 					<div className="col-sm-4">
 						<input type="text" className="form-control" name="comments" />
 					</div>
+				</div>
+				<div className="form-group">
 				</div>
 				<div className="form-group">
 					<div className="col-sm-2"></div>
