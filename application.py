@@ -213,6 +213,23 @@ def user_join_time():
 def send_asset(filename):
     return send_from_directory(path.join(here, "public"), filename)
 
+# ACME letsencrypt stuff via sabayon https://github.com/dmathieu/sabayon
+def find_key(token):
+    if token == os.environ.get("ACME_TOKEN"):
+        return os.environ.get("ACME_KEY")
+    for k, v in os.environ.items():  #  os.environ.iteritems() in Python 2
+        if v == token and k.startswith("ACME_TOKEN_"):
+            n = k.replace("ACME_TOKEN_", "")
+            return os.environ.get("ACME_KEY_{}".format(n))  # os.environ.get("ACME_KEY_%s" % n) in Python 2
+
+
+@app.route("/.well-known/acme-challenge/<token>")
+def acme(token):
+    key = find_key(token)
+    if key is None:
+        abort(404)
+    return key
+
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
 	app.run(extra_files=[app.config["WEBPACK_MANIFEST_PATH"]])
