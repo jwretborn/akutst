@@ -215,12 +215,12 @@ def send_asset(filename):
 
 # ACME letsencrypt stuff via sabayon https://github.com/dmathieu/sabayon
 def find_key(token):
-    if token == os.environ.get("ACME_TOKEN"):
-        return os.environ.get("ACME_KEY")
-    for k, v in os.environ.items():  #  os.environ.iteritems() in Python 2
+    if token == environ.get("ACME_TOKEN"):
+        return environ.get("ACME_KEY")
+    for k, v in environ.items():  #  os.environ.iteritems() in Python 2
         if v == token and k.startswith("ACME_TOKEN_"):
             n = k.replace("ACME_TOKEN_", "")
-            return os.environ.get("ACME_KEY_{}".format(n))  # os.environ.get("ACME_KEY_%s" % n) in Python 2
+            return environ.get("ACME_KEY_{}".format(n))  # os.environ.get("ACME_KEY_%s" % n) in Python 2
 
 
 @app.route("/.well-known/acme-challenge/<token>")
