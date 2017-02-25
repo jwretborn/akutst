@@ -185,7 +185,10 @@ def group_items(id):
 		query = db.session.query(Group).filter(Group.name == id)
 
 	group = query.first()
-	items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
+	try :
+		items = db.session.query(GroupItem).filter(GroupItem.group_id == group.id).order_by(GroupItem.weight.desc()).all()
+	except AttributeError :
+		return jsonify({'items' : []})
 	return jsonify(items=[i.serialize for i in items])
 
 @app.route('/api/diagnostics/procedures', methods=['GET'])
@@ -209,6 +212,23 @@ def user_join_time():
 @app.route("/assets/<path:filename>")
 def send_asset(filename):
     return send_from_directory(path.join(here, "public"), filename)
+
+# ACME letsencrypt stuff via sabayon https://github.com/dmathieu/sabayon
+def find_key(token):
+    if token == environ.get("ACME_TOKEN"):
+        return environ.get("ACME_KEY")
+    for k, v in environ.items():  #  os.environ.iteritems() in Python 2
+        if v == token and k.startswith("ACME_TOKEN_"):
+            n = k.replace("ACME_TOKEN_", "")
+            return environ.get("ACME_KEY_{}".format(n))  # os.environ.get("ACME_KEY_%s" % n) in Python 2
+
+
+@app.route("/.well-known/acme-challenge/<token>")
+def acme(token):
+    key = find_key(token)
+    if key is None:
+        abort(404)
+    return key
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
