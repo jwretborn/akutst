@@ -3,52 +3,64 @@ from flask_security import UserMixin, RoleMixin
 
 db = SQLAlchemy()
 
+procedureTags = db.Table('procedure_tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id', name='procedure_tags_tag_id_fkey'), nullable=False),
+    db.Column('procedure_id', db.Integer, db.ForeignKey('procedures.id', name='procedure_tags_procedure_id_fkey'), nullable=False)
+)
+
+patientTags = db.Table('patient_tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id', name='patient_tags_tag_id_fkey'), nullable=False),
+    db.Column('patient_id', db.Integer, db.ForeignKey('patients.id', name='patient_tags_patient_id_fkey'), nullable=False)
+)
+
 """Procedure class"""
 class Procedure(db.Model):
-	__tablename__ = 'procedures'
+    __tablename__ = 'procedures'
 
-	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-	procedure_type = db.Column(db.Integer, db.ForeignKey('procedure_types.id'), nullable=False)
-	method_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=True)
-	anatomy_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=True)
-	tuition = db.Column(db.Boolean, default=False)
-	created = db.Column(db.Date, default=db.func.now())
-	successful = db.Column(db.Boolean, nullable=True)
-	comments = db.Column(db.String(400), nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    procedure_type = db.Column(db.Integer, db.ForeignKey('procedure_types.id'), nullable=False)
+    method_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=True)
+    anatomy_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=True)
+    tuition = db.Column(db.Boolean, default=False)
+    created = db.Column(db.Date, default=db.func.now())
+    successful = db.Column(db.Boolean, nullable=True)
+    comments = db.Column(db.String(400), nullable=True)
 
-	user = db.relationship("User", foreign_keys=[user_id])
-	procedure = db.relationship("ProcedureType", foreign_keys=[procedure_type])
-	method = db.relationship("GroupItem", foreign_keys=[method_id])
-	anatomy = db.relationship("GroupItem", foreign_keys=[anatomy_id])
+    user = db.relationship("User", foreign_keys=[user_id])
+    procedure = db.relationship("ProcedureType", foreign_keys=[procedure_type])
+    method = db.relationship("GroupItem", foreign_keys=[method_id])
+    anatomy = db.relationship("GroupItem", foreign_keys=[anatomy_id])
 
-	@property
-	def serialize(self):
-		"""Return object data in easily serializeable format"""
-		return {
-			'id'				: self.id,
-			'procedure_type'	: self.procedure_type,
-			'method_id'  		: self.method_id,
-			'anatomy_id'		: self.anatomy_id,
-			'tuition'			: self.tuition,
-			'created'			: str(self.created),
-			'successful'		: self.successful,
-			'comments'			: self.comments,
-			'name'				: str(self.procedure)
-		}
+    tags = db.relationship("Tag", secondary=procedureTags, backref=db.backref("procedures", lazy='dynamic'))
 
-	def __init__(self, user_id, type, method, anatomy, tuition, created, successful, comments):
-		self.user_id=user_id
-		self.procedure_type=type
-		self.method_id=method
-		self.anatomy_id=anatomy
-		self.tuition=tuition
-		self.created=created
-		self.successful=successful
-		self.comments=comments
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'				: self.id,
+            'procedure_type'	: self.procedure_type,
+            'method_id'  		: self.method_id,
+            'anatomy_id'		: self.anatomy_id,
+            'tuition'			: self.tuition,
+            'created'			: str(self.created),
+            'successful'		: self.successful,
+            'comments'			: self.comments,
+            'name'				: str(self.procedure)
+        }
 
-	def __repr__(self):
-		return u'{}'.format(self.procedure.name)
+    def __init__(self, user_id, type, method, anatomy, tuition, created, successful, comments):
+        self.user_id=user_id
+        self.procedure_type=type
+        self.method_id=method
+        self.anatomy_id=anatomy
+        self.tuition=tuition
+        self.created=created
+        self.successful=successful
+        self.comments=comments
+
+    def __repr__(self):
+        return u'{}'.format(self.procedure.name)
 
 """Procedure Type class"""
 class ProcedureType(db.Model):
@@ -112,45 +124,47 @@ class GroupItem(db.Model):
 
 """Patient class"""
 class Patient(db.Model):
-	__tablename__ = 'patients'
+    __tablename__ = 'patients'
 
-	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-	age_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=False)
-	triage_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=False)
-	retts_id = db.Column(db.Integer, db.ForeignKey('retts_codes.id'), nullable=True)
-	admittance = db.Column(db.Boolean, nullable=True)
-	tuition = db.Column(db.Boolean, default=False)
-	comments = db.Column(db.String(400))
-	created = db.Column(db.Date, default=db.func.now())
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    age_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=False)
+    triage_id = db.Column(db.Integer, db.ForeignKey('group_items.id'), nullable=False)
+    retts_id = db.Column(db.Integer, db.ForeignKey('retts_codes.id'), nullable=True)
+    admittance = db.Column(db.Boolean, nullable=True)
+    tuition = db.Column(db.Boolean, default=False)
+    comments = db.Column(db.String(400))
+    created = db.Column(db.Date, default=db.func.now())
 
-	user = db.relationship("User", foreign_keys=[user_id])
-	age = db.relationship("GroupItem", foreign_keys=[age_id])
-	triage = db.relationship("GroupItem", foreign_keys=[triage_id])
-	retts = db.relationship("RettsCode", foreign_keys=[retts_id])
+    user = db.relationship("User", foreign_keys=[user_id])
+    age = db.relationship("GroupItem", foreign_keys=[age_id])
+    triage = db.relationship("GroupItem", foreign_keys=[triage_id])
+    retts = db.relationship("RettsCode", foreign_keys=[retts_id])
 
-	@property
-	def serialize(self):
-		"""Return object data in easily serializeable format"""
-		return {
-			'id'				: self.id,
-			'name'				: '{}, {}'.format(self.age, self.retts),
-			'admittance'		: self.admittance,
-			'tuition'			: self.tuition,
-			'created'			: str(self.created),
-			'user'				: str(self.user),
-			'triage'			: str(self.triage),
-			'retts'				: str(self.retts),
-			'age'				: str(self.age),
-			'comments'			: self.comments
-		}
+    tags = db.relationship("Tag", secondary=patientTags, backref=db.backref("patients", lazy='dynamic'))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'				: self.id,
+            'name'				: '{}, {}'.format(self.age, self.retts),
+            'admittance'		: self.admittance,
+            'tuition'			: self.tuition,
+            'created'			: str(self.created),
+            'user'				: str(self.user),
+            'triage'			: str(self.triage),
+            'retts'				: str(self.retts),
+            'age'				: str(self.age),
+            'comments'			: self.comments
+        }
 
 
-	def __repr__(self):
-		return self.retts
+    def __repr__(self):
+        return self.retts
 
-	def __str__(self):
-		return str(self.retts)
+    def __str__(self):
+        return str(self.retts)
 
 """Retts code class"""
 class RettsCode(db.Model):
@@ -306,6 +320,23 @@ class ResidencyProgram(db.Model):
         return {
             'id'      : self.id,
             'name'    : self.name
+        }
+
+    def __repr__(self):
+        return u'{}'.format(self.name)
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255), nullable=False)
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'       : self.id,
+            'name'     : self.name
         }
 
     def __repr__(self):
