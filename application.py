@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required, current_user
 from flask_security.utils import encrypt_password
 from flask_webpack import Webpack
+from flask_mail import Mail, Message
 
 from flask_admin import Admin
 from flask_admin import helpers as admin_helpers
@@ -17,7 +18,7 @@ from modules.admin.modelview import MyModelView, PatientModelView, ProcedureMode
 from modules.admin.view import AnalyticsView
 
 from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
-from forms import ProcedureForm, PatientForm
+from forms import ProcedureForm, PatientForm, ExtendedRegisterForm
 
 # Fix ascii jinja2-error
 import sys
@@ -31,6 +32,7 @@ here = path.dirname(path.realpath(__file__))
 app.config.from_object(environ['APP_SETTINGS'])
 debug = "DEBUG" in environ
 db.init_app(app)
+mail = Mail(app)
 
 # Setup Flask-Webpack
 webpack = Webpack()
@@ -38,7 +40,7 @@ webpack.init_app(app)
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
 
 # define a context processor for merging flask-admin's template context into the
 # flask-security views.
@@ -213,6 +215,23 @@ def user_join_time():
 def send_asset(filename):
     return send_from_directory(path.join(here, "public"), filename)
 
+# Helper urls
+@app.route("/mail/test")
+@login_required
+def test_mail():
+    msg = Message("Hello", recipients=["jens_register@wbn.se"])
+    msg.body = "Testing"
+    mail.send(msg)
+    flash(u'Mail skickat', 'success')
+    return redirect(url_for('patients'))
+
+@app.route("/util/reset/<table>", methods=['GET'])
+@login_required
+def reset_database_seq(table):
+    result = db.engine.execute("SELECT setval('%s_id_seq', (SELECT MAX(id) FROM %s)+1)" % (table, table))
+    return jsonify("success")
+
+
 # ACME letsencrypt stuff via sabayon https://github.com/dmathieu/sabayon
 def find_key(token):
     if token == environ.get("ACME_TOKEN"):
@@ -221,7 +240,6 @@ def find_key(token):
         if v == token and k.startswith("ACME_TOKEN_"):
             n = k.replace("ACME_TOKEN_", "")
             return environ.get("ACME_KEY_{}".format(n))  # os.environ.get("ACME_KEY_%s" % n) in Python 2
-
 
 @app.route("/.well-known/acme-challenge/<token>")
 def acme(token):

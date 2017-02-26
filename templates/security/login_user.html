@@ -15,6 +15,12 @@
                 {{ render_field(login_user_form.next) }}
                 {{ render_field(login_user_form.submit, class="btn btn-primary") }}
             </form>
+            {% if security.registerable %}
+            <a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}"><button class="btn btn-primary">Register</button></a>
+            {% endif %}
+            {% if security.recoverable %}
+            <a href="{{ url_for_security('forgot_password') }}"><button class="btn btn-primary">Forgot password</button></a><br/>
+            {% endif %}
         </div>
     </div>
 </div>
