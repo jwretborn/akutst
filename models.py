@@ -210,42 +210,103 @@ class Role(db.Model, RoleMixin):
 
 """User class, flask-sequrity"""
 class User(db.Model, UserMixin):
-	__tablename__ = 'users'
+    __tablename__ = 'users'
 
     # Default fields for Flask-Security
-	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	first_name = db.Column(db.String(255))
-	last_name = db.Column(db.String(255))
-	email = db.Column(db.String(255), unique=True)
-	password = db.Column(db.String(255))
-	active = db.Column(db.Boolean())
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = db.Column(db.String(255))
+    last_name = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
 
-	# Extra field
-	username = db.Column(db.String(32))
+    # Extra field
+    username = db.Column(db.String(32))
+    hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id', name="users_hospital_id_fkey"), nullable=True)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id', name='users_department_id_fkey'), nullable=True)
+    residency_id = db.Column(db.Integer, db.ForeignKey('residency_programs.id', name='users_residency_id_fkey'), nullable=True)
 
-	## Confirm fields
-	confirmed_at = db.Column(db.DateTime())
+    ## Confirm fields
+    confirmed_at = db.Column(db.DateTime())
 
-	## Trackable fields
-	last_login_at = db.Column(db.DateTime())
-	current_login_at = db.Column(db.DateTime())
-	last_login_ip = db.Column(db.String(50))
-	current_login_ip = db.Column(db.String(50))
-	login_count = db.Column(db.Integer)
+    ## Trackable fields
+    last_login_at = db.Column(db.DateTime())
+    current_login_at = db.Column(db.DateTime())
+    last_login_ip = db.Column(db.String(50))
+    current_login_ip = db.Column(db.String(50))
+    login_count = db.Column(db.Integer)
 
-	## Roles
-	roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
+    ## Roles
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
-	@property
-	def serialize(self):
-		"""Return object data in easily serializeable format"""
-		return {
-			'first_name'	: self.first_name,
-			'last_name'		: self.last_name,
-			'email'			: self.email,
-			'username'		: self.username,
-			'confirmed_at'	: self.confirmed_at
-		}
+    @property
+    def serialize(self):
+    	"""Return object data in easily serializeable format"""
+    	return {
+    		'first_name'	: self.first_name,
+    		'last_name'		: self.last_name,
+    		'email'			: self.email,
+    		'username'		: self.username,
+    		'confirmed_at'	: self.confirmed_at
+    	}
 
-	def __repr__(self):
-		return u'{}'.format(self.username)
+    def __repr__(self):
+    	return u'{}'.format(self.username)
+
+"""Hospital Class"""
+class Hospital(db.Model):
+    __tablename__ = 'hospitals'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'      : self.id,
+            'name'    : self.name
+        }
+
+    def __repr__(self):
+        return u'{}'.format(self.name)
+
+"""Department Class"""
+class Department(db.Model):
+    __tablename__ = 'departments'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+    hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'), nullable=False)
+
+    hospital = db.relationship("Hospital", foreign_keys=[hospital_id])
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'      : self.id,
+            'name'    : self.name,
+            'hospital': str(self.hospital)
+        }
+
+    def __repr__(self):
+        return u'{}'.format(self.name)
+
+"""Department Class"""
+class ResidencyProgram(db.Model):
+    __tablename__ = 'residency_programs'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'      : self.id,
+            'name'    : self.name
+        }
+
+    def __repr__(self):
+        return u'{}'.format(self.name)
