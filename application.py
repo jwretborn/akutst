@@ -17,7 +17,7 @@ from flask_admin.contrib.sqla import ModelView
 from modules.admin.modelview import MyModelView, PatientModelView, ProcedureModelView, RettsCodeModelView, UserModelView
 from modules.admin.view import AnalyticsView
 
-from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role
+from models import db, User, Patient, Procedure, ProcedureType, RettsCode, Group, GroupItem, Role, Tag
 from forms import ProcedureForm, PatientForm, ExtendedRegisterForm
 
 # Fix ascii jinja2-error
@@ -75,69 +75,108 @@ def ultrasound():
 
 @app.route("/patienter", methods=['GET', 'POST'])
 def patients():
-	form = PatientForm(request.form)
-	if request.method == 'POST' and form.validate() :
-		try :
-			username = form.user_id.data
-			user = db.session.query(User).filter(User.username == username).first()
+    print request.form
+    form = PatientForm(request.form)
+    if request.method == 'POST' and form.validate() :
+        try :
+            username = form.user_id.data
+            user = db.session.query(User).filter(User.username == username).first()
 
-			if user is None:
-				raise ValueError(u'ID existerar inte')
+            if user is None:
+                raise ValueError(u'ID existerar inte')
 
-			p = Patient(
-				user_id=user.id,
-				age_id=form.age.data,
-				triage_id=form.prio.data,
-				retts_id=form.retts.data,
-				admittance=form.admittance.data,
-				tuition=form.tuition.data,
-				comments=form.comments.data,
-				created=form.date.data
-			)
-			db.session.add(p)
-			db.session.commit()
-			flash(u'Patienten sparad', 'success')
-		except ValueError as err:
-			flash(err, 'warning')
-	else :
-		flash_form_errors(form)
+            p = Patient(
+                user_id=user.id,
+                age_id=form.age.data,
+                triage_id=form.prio.data,
+                retts_id=form.retts.data,
+                admittance=form.admittance.data,
+                tuition=form.tuition.data,
+                comments=form.comments.data,
+                created=form.date.data
+            )
 
-	return render_template("patients.html")
+            ## Split tag data
+            form.tags.data = form.tags.data.split(',')
+            for tag in form.tags.data :
+                ## Check if we have an integer
+                try :
+                    tag_id = int(tag)
+                    t = db.session.query(Tag).filter(Tag.id == tag_id).first()
+                except ValueError :
+                    t = db.session.query(Tag).filter(Tag.name==tag).first()
+                    if t is None :
+                        t = Tag(
+                            name=tag
+                        )
+                        db.session.add(t)
+
+                if t is not None :
+                    p.tags.append(t)
+
+
+            db.session.add(p)
+            db.session.commit()
+
+            flash(u'Patienten sparad', 'success')
+        except ValueError as err:
+            flash(err, 'warning')
+    else :
+        flash_form_errors(form)
+
+    return render_template("patients.html")
 
 @app.route('/procedurer', methods=['GET', 'POST'])
 @app.route('/procedurer/<id>', methods=['GET', 'POST'])
 def procedure(id=False):
-	procedure_type = False
-	form = ProcedureForm(request.form)
-	if request.method == 'POST' and form.validate():
-		try :
-			## Fetch user
-			username = form.user_id.data
-			user = db.session.query(User).filter(User.username == username).first()
+    procedure_type = False
+    form = ProcedureForm(request.form)
+    if request.method == 'POST' and form.validate():
+        try :
+            ## Fetch user
+            username = form.user_id.data
+            user = db.session.query(User).filter(User.username == username).first()
 
-			if user is None:
-				raise ValueError(u'ID existerar inte')
+            if user is None:
+                raise ValueError(u'ID existerar inte')
 
-			p = Procedure(
-				user_id=user.id,
-				type=form.procedure.data,
-				method=form.method.data,
-				anatomy=form.anatomy.data,
-				tuition=form.tuition.data,
-				created=form.date.data,
-				successful=form.successful.data,
-				comments=form.comments.data
-			)
-			db.session.add(p)
-			db.session.commit()
+            p = Procedure(
+                user_id=user.id,
+                type=form.procedure.data,
+                method=form.method.data,
+                anatomy=form.anatomy.data,
+                tuition=form.tuition.data,
+                created=form.date.data,
+                successful=form.successful.data,
+                comments=form.comments.data
+            )
 
-			flash(u'Proceduren sparad', 'success')
-		except ValueError as err:
-			flash(err, 'warning')
-	else :
-		flash_form_errors(form)
+            ## Split tag data
+            form.tags.data = form.tags.data.split(',')
+            for tag in form.tags.data :
+                ## Check if we have an integer
+                try :
+                    tag_id = int(tag)
+                    t = db.session.query(Tag).filter(Tag.id == tag).first()
+                except ValueError :
+                    t = Tag(
+                        name = tag_id
+                    )
+                    db.session.add(t)
 
-	return render_template('procedure.html')
+                if t is not None :
+                    p.tags.append(t)
+
+            db.session.add(p)
+            db.session.commit()
+
+            flash(u'Proceduren sparad', 'success')
+        except ValueError as err:
+            flash(err, 'warning')
+    else :
+        flash_form_errors(form)
+
+    return render_template('procedure.html')
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
@@ -192,6 +231,19 @@ def group_items(id):
 	except AttributeError :
 		return jsonify({'items' : []})
 	return jsonify(items=[i.serialize for i in items])
+
+@app.route('/api/tags', methods=['GET', 'POST'])
+def api_tags():
+    try :
+        if request.method == 'POST':
+            print request.data
+            return jsonify(request.data)
+        else :
+            tags = db.session.query(Tag).all()
+            return jsonify(items=[i.serialize for i in tags])
+    except AttributeError:
+        return jsonify({'items' : []})
+
 
 @app.route('/api/diagnostics/procedures', methods=['GET'])
 @login_required

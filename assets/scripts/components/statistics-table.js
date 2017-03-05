@@ -12,7 +12,7 @@ export default class StatisticsTable extends Component {
 			'groupBy'	: false
 		}
 
-        this.handleStoreChange = this.handleStoreChange.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.handleGroupBySelectChange = this.handleGroupBySelectChange.bind(this);
 	}
 
