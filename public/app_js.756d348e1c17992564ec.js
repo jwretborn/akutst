@@ -19537,7 +19537,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -19579,240 +19579,250 @@
 	var _tokenSearchJs2 = _interopRequireDefault(_tokenSearchJs);
 
 	var PatientForm = (function (_Component) {
-		_inherits(PatientForm, _Component);
+	  _inherits(PatientForm, _Component);
 
-		function PatientForm(props) {
-			_classCallCheck(this, PatientForm);
+	  function PatientForm(props) {
+	    _classCallCheck(this, PatientForm);
 
-			_get(Object.getPrototypeOf(PatientForm.prototype), 'constructor', this).call(this, props);
-			var d = new Date();
+	    _get(Object.getPrototypeOf(PatientForm.prototype), 'constructor', this).call(this, props);
+	    var d = new Date();
 
-			this.state = {
-				searchFilter: 'adult',
-				date: d.toISOString().substring(0, 10),
-				user_id: false
-			};
+	    this.state = {
+	      searchFilter: 'adult',
+	      date: d.toISOString().substring(0, 10),
+	      user_id: false
+	    };
 
-			this.handleSelectChange = this.handleSelectChange.bind(this);
-			this.handleFieldChange = this.handleFieldChange.bind(this);
-			this.handleStoreChange = this.handleStoreChange.bind(this);
-			this.handleKeyEvent = this.handleKeyEvent.bind(this);
-		}
+	    this.handleSelectChange = this.handleSelectChange.bind(this);
+	    this.handleFieldChange = this.handleFieldChange.bind(this);
+	    this.handleStoreChange = this.handleStoreChange.bind(this);
+	    this.handleKeyEvent = this.handleKeyEvent.bind(this);
+	  }
 
-		_createClass(PatientForm, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				_storesApiStoreJs2['default'].addChangeListener(this.handleStoreChange);
+	  _createClass(PatientForm, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      _storesApiStoreJs2['default'].addChangeListener(this.handleStoreChange);
 
-				this.loadStoreData();
-			}
-		}, {
-			key: 'loadStoreData',
-			value: function loadStoreData() {
-				var user = _storesApiStoreJs2['default'].get('diagnostics/user');
+	      this.loadStoreData();
+	    }
+	  }, {
+	    key: 'loadStoreData',
+	    value: function loadStoreData() {
+	      var user = _storesApiStoreJs2['default'].get('diagnostics/user');
 
-				if (user != false) {
-					this.setState({
-						user_id: user['username']
-					});
-				}
-			}
-		}, {
-			key: 'handleFieldChange',
-			value: function handleFieldChange(field) {
-				return (function (event) {
-					var elem = typeof event.selectedIndex === "undefined" ? event.target : event;
-					var value = elem.value || elem.options[elem.selectedIndex].value;
-					var newState = {};
-					newState[field] = value;
+	      if (user != false) {
+	        this.setState({
+	          user_id: user['username']
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleFieldChange',
+	    value: function handleFieldChange(field) {
+	      return (function (event) {
+	        var elem = typeof event.selectedIndex === "undefined" ? event.target : event;
+	        var value = elem.value || elem.options[elem.selectedIndex].value;
+	        var newState = {};
+	        newState[field] = value;
 
-					this.setState(newState);
-				}).bind(this);
-			}
-		}, {
-			key: 'handleSelectChange',
-			value: function handleSelectChange(key, value, namespace) {
-				switch (namespace) {
-					case 'age':
-						if (value !== 'Vuxen') {
-							this.setState({ searchFilter: 'ped' });
-						} else {
-							this.setState({ searchFilter: 'adult' });
-						}
-						break;
-					default:
-						break;
-				}
-			}
-		}, {
-			key: 'handleStoreChange',
-			value: function handleStoreChange() {
-				this.loadStoreData();
-			}
+	        this.setState(newState);
+	      }).bind(this);
+	    }
+	  }, {
+	    key: 'handleSelectChange',
+	    value: function handleSelectChange(key, value, namespace) {
+	      switch (namespace) {
+	        case 'age':
+	          if (value !== 'Vuxen') {
+	            this.setState({ searchFilter: 'ped' });
+	          } else {
+	            this.setState({ searchFilter: 'adult' });
+	          }
+	          break;
+	        default:
+	          break;
+	      }
+	    }
+	  }, {
+	    key: 'handleStoreChange',
+	    value: function handleStoreChange() {
+	      this.loadStoreData();
+	    }
 
-			// Event handler
-		}, {
-			key: 'handleKeyEvent',
-			value: function handleKeyEvent(event) {
-				// We do not want to submit on enter
-				if (event.key == 'Enter') {
-					event.preventDefault();
-				}
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				return _react2['default'].createElement(
-					'div',
-					{ onKeyDown: this.handleKeyEvent },
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(
-							'label',
-							{ htmlFor: 'id', className: 'col-sm-2 control-label' },
-							'Användare'
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement('input', {
-								type: 'text',
-								className: 'form-control',
-								name: 'user_id',
-								value: this.state.user_id,
-								onChange: this.handleFieldChange('user_id') })
-						)
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(
-							'label',
-							{ htmlFor: 'date', className: 'col-sm-2 control-label' },
-							'Datum'
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement('input', {
-								type: 'date',
-								className: 'form-control',
-								name: 'date',
-								defaultValue: this.state.date,
-								onBlur: this.handleFieldChange('date') })
-						)
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(_input_selectJs2['default'], {
-							url: 'group/colours/items',
-							label: 'Prioritet',
-							name: 'prio',
-							onUpdate: this.handleSelectChange })
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(_input_selectJs2['default'], {
-							url: 'group/ages/items',
-							label: 'Ålder',
-							name: 'age',
-							onUpdate: this.handleSelectChange })
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(_tokenSearchJs2['default'], {
-							url: 'codes',
-							mapBadge: 'type',
-							name: 'retts',
-							nameDisplay: 'Sökorsak',
-							singleValue: true,
-							filterKey: 'type',
-							filterValue: this.state.searchFilter })
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(
-							'label',
-							{ htmlFor: 'admittance', className: 'col-sm-2 control-label' },
-							'Inläggning'
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement(
-								'label',
-								{ className: 'radio-inline' },
-								_react2['default'].createElement('input', { type: 'radio', name: 'admittance', id: 'admittancelRadio1', value: '1' }),
-								' Ja'
-							),
-							_react2['default'].createElement(
-								'label',
-								{ className: 'radio-inline' },
-								_react2['default'].createElement('input', { type: 'radio', name: 'admittance', id: 'admittancelRadio2', value: '' }),
-								' Nej'
-							)
-						)
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(
-							'label',
-							{ htmlFor: 'tuition', className: 'col-sm-2 control-label' },
-							'Handledning'
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement(
-								'label',
-								{ className: 'radio-inline' },
-								_react2['default'].createElement('input', { type: 'radio', name: 'tuition', id: 'tuitionlRadio1', value: '1' }),
-								' Ja'
-							),
-							_react2['default'].createElement(
-								'label',
-								{ className: 'radio-inline' },
-								_react2['default'].createElement('input', { type: 'radio', name: 'tuition', id: 'tuitionlRadio2', value: '' }),
-								' Nej'
-							)
-						)
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement(
-							'label',
-							{ htmlFor: 'comments', className: 'col-sm-2 control-label' },
-							'Kommentar'
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement('input', { type: 'text', className: 'form-control', name: 'comments' })
-						)
-					),
-					_react2['default'].createElement('div', { className: 'form-group' }),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2['default'].createElement('div', { className: 'col-sm-2' }),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'col-sm-4' },
-							_react2['default'].createElement('input', { className: 'btn btn-default', type: 'submit', value: 'Submit' })
-						)
-					)
-				);
-			}
-		}]);
+	    // Event handler
+	  }, {
+	    key: 'handleKeyEvent',
+	    value: function handleKeyEvent(event) {
+	      // We do not want to submit on enter
+	      if (event.key == 'Enter') {
+	        event.preventDefault();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'div',
+	        { onKeyDown: this.handleKeyEvent },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(
+	            'label',
+	            { htmlFor: 'id', className: 'col-sm-2 control-label' },
+	            'Användare'
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement('input', {
+	              type: 'text',
+	              className: 'form-control',
+	              name: 'user_id',
+	              value: this.state.user_id,
+	              onChange: this.handleFieldChange('user_id') })
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(
+	            'label',
+	            { htmlFor: 'date', className: 'col-sm-2 control-label' },
+	            'Datum'
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement('input', {
+	              type: 'date',
+	              className: 'form-control',
+	              name: 'date',
+	              defaultValue: this.state.date,
+	              onBlur: this.handleFieldChange('date') })
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(_input_selectJs2['default'], {
+	            url: 'group/colours/items',
+	            label: 'Prioritet',
+	            name: 'prio',
+	            onUpdate: this.handleSelectChange })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(_input_selectJs2['default'], {
+	            url: 'group/ages/items',
+	            label: 'Ålder',
+	            name: 'age',
+	            onUpdate: this.handleSelectChange })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(_tokenSearchJs2['default'], {
+	            url: 'codes',
+	            mapBadge: 'type',
+	            name: 'retts',
+	            nameDisplay: 'Sökorsak',
+	            singleValue: true,
+	            filterKey: 'type',
+	            filterValue: this.state.searchFilter })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(
+	            'label',
+	            { htmlFor: 'admittance', className: 'col-sm-2 control-label' },
+	            'Inläggning'
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement(
+	              'label',
+	              { className: 'radio-inline' },
+	              _react2['default'].createElement('input', { type: 'radio', name: 'admittance', id: 'admittancelRadio1', value: '1' }),
+	              ' Ja'
+	            ),
+	            _react2['default'].createElement(
+	              'label',
+	              { className: 'radio-inline' },
+	              _react2['default'].createElement('input', { type: 'radio', name: 'admittance', id: 'admittancelRadio2', value: '' }),
+	              ' Nej'
+	            )
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(
+	            'label',
+	            { htmlFor: 'tuition', className: 'col-sm-2 control-label' },
+	            'Handledning'
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement(
+	              'label',
+	              { className: 'radio-inline' },
+	              _react2['default'].createElement('input', { type: 'radio', name: 'tuition', id: 'tuitionlRadio1', value: '1' }),
+	              ' Ja'
+	            ),
+	            _react2['default'].createElement(
+	              'label',
+	              { className: 'radio-inline' },
+	              _react2['default'].createElement('input', { type: 'radio', name: 'tuition', id: 'tuitionlRadio2', value: '' }),
+	              ' Nej'
+	            )
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(_tokenSearchJs2['default'], {
+	            url: 'tags',
+	            name: 'tags',
+	            nameDisplay: 'Taggar',
+	            singleValue: false,
+	            canAdd: true })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement(
+	            'label',
+	            { htmlFor: 'comments', className: 'col-sm-2 control-label' },
+	            'Kommentar'
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement('input', { type: 'text', className: 'form-control', name: 'comments' })
+	          )
+	        ),
+	        _react2['default'].createElement('div', { className: 'form-group' }),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2['default'].createElement('div', { className: 'col-sm-2' }),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            _react2['default'].createElement('input', { className: 'btn btn-default', type: 'submit', value: 'Submit' })
+	          )
+	        )
+	      );
+	    }
+	  }]);
 
-		return PatientForm;
+	  return PatientForm;
 	})(_react.Component);
 
 	exports['default'] = PatientForm;
@@ -22254,7 +22264,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -22284,338 +22294,356 @@
 	var _underscore2 = _interopRequireDefault(_underscore);
 
 	var TokenSearch = (function (_Component) {
-		_inherits(TokenSearch, _Component);
+	  _inherits(TokenSearch, _Component);
 
-		// Constructor
+	  // Constructor
 
-		function TokenSearch(props) {
-			_classCallCheck(this, TokenSearch);
+	  function TokenSearch(props) {
+	    _classCallCheck(this, TokenSearch);
 
-			_get(Object.getPrototypeOf(TokenSearch.prototype), 'constructor', this).call(this, props);
-			this.state = {
-				searchString: '',
-				display: 'hide',
-				listItems: [],
-				value: '',
-				selectedItems: [],
-				listIndexSel: 0
-			};
+	    _get(Object.getPrototypeOf(TokenSearch.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      searchString: '',
+	      display: 'hide',
+	      listItems: [],
+	      value: '',
+	      selectedItems: [],
+	      listIndexSel: 0
+	    };
 
-			// Bind functions
-			this.handleChange = this.handleChange.bind(this);
-			this.handleSelect = this.handleSelect.bind(this);
-			this.handleDeleteToken = this.handleDeleteToken.bind(this);
-			this.handleKeyEvent = this.handleKeyEvent.bind(this);
-			this.handleStoreChange = this.handleStoreChange.bind(this);
-			this.applyFilter = this.applyFilter.bind(this);
-			this.getSearchList = this.getSearchList.bind(this);
-		}
+	    // Bind functions
+	    this.handleChange = this.handleChange.bind(this);
+	    this.handleSelect = this.handleSelect.bind(this);
+	    this.handleDeleteToken = this.handleDeleteToken.bind(this);
+	    this.handleKeyEvent = this.handleKeyEvent.bind(this);
+	    this.handleStoreChange = this.handleStoreChange.bind(this);
+	    this.applyFilter = this.applyFilter.bind(this);
+	    this.getSearchList = this.getSearchList.bind(this);
+	  }
 
-		// Do initial loading
+	  // Do initial loading
 
-		_createClass(TokenSearch, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				_storesApiStoreJs2['default'].addChangeListener(this.handleStoreChange);
-				this.loadData();
+	  _createClass(TokenSearch, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      _storesApiStoreJs2['default'].addChangeListener(this.handleStoreChange);
+	      this.loadData();
 
-				// Keys
-			}
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_storesApiStoreJs2['default'].removeChangeListener(this.handleStoreChange);
-			}
-		}, {
-			key: 'loadData',
-			value: function loadData() {
-				var data = _storesApiStoreJs2['default'].get(this.props.url);
-				if (data !== 'loading') {
-					this.setState({
-						listItems: data.items
-					});
-				}
-			}
+	      // Keys
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      _storesApiStoreJs2['default'].removeChangeListener(this.handleStoreChange);
+	    }
+	  }, {
+	    key: 'loadData',
+	    value: function loadData() {
+	      var data = _storesApiStoreJs2['default'].get(this.props.url);
+	      if (data !== 'loading') {
+	        this.setState({
+	          listItems: data.items
+	        });
+	      }
+	    }
 
-			// Filter items based on the props filter key and on already selected items
-		}, {
-			key: 'applyFilter',
-			value: function applyFilter(items) {
-				if (this.props.filterKey !== '') {
-					items = items.filter((function (item) {
-						// Check pre-specified filter-key
-						if (item[this.props.filterKey] == null) {
-							if (this.props.filterValue === '') {
-								return true;
-							} else {
-								return false;
-							}
-						}
+	    // Filter items based on the props filter key and on already selected items
+	  }, {
+	    key: 'applyFilter',
+	    value: function applyFilter(items) {
+	      items = items.filter((function (item) {
+	        if (this.props.filterKey !== '') {
+	          // Check pre-specified filter-key
+	          if (item[this.props.filterKey] == null) {
+	            if (this.props.filterValue === '') {
+	              return true;
+	            } else {
+	              return false;
+	            }
+	          }
+	          // Check for match of the search-string
+	          return item[this.props.filterKey].toLowerCase().match(this.props.filterValue);
+	        }
 
-						// Remove selected values
-						var selected = this.state.selectedItems;
-						if (_underscore2['default'].contains(_underscore2['default'].pluck(selected, 'name'), item['name'].toLowerCase()) === true) {
-							return false;
-						}
+	        // Remove selected values
+	        return !_underscore2['default'].contains(_underscore2['default'].pluck(this.state.selectedItems, this.props.mapValue), item[this.props.mapValue].toLowerCase());
+	      }).bind(this));
 
-						// Check for match of the search-string
-						return item[this.props.filterKey].toLowerCase().match(this.props.filterValue);
-					}).bind(this));
-				}
-				return items;
-			}
-		}, {
-			key: 'getSearchList',
-			value: function getSearchList(items) {
-				var codes = this.applyFilter(this.state.listItems);
-				var searchString = this.state.searchString.trim().toLowerCase();
+	      return items;
+	    }
+	  }, {
+	    key: 'getSearchList',
+	    value: function getSearchList(items) {
+	      var codes = this.applyFilter(this.state.listItems);
+	      var searchString = this.state.searchString.trim().toLowerCase();
 
-				// filter items list by value from input box
-				if (searchString.length > 0) {
-					codes = codes.filter((function (codes) {
-						return codes[this.props.mapValue].toLowerCase().match(searchString);
-					}).bind(this)); // bind to component
-				}
+	      // filter items list by value from input box
+	      if (searchString.length > 0) {
+	        codes = codes.filter((function (codes) {
+	          return codes[this.props.mapValue].toLowerCase().match(searchString);
+	        }).bind(this)); // bind to component
+	      }
 
-				return codes;
-			}
+	      return codes;
+	    }
 
-			// sets state, triggers render method
-		}, {
-			key: 'handleChange',
-			value: function handleChange(event) {
-				var str = event.target.value;
-				// grab value form input box
-				this.setState({ searchString: str });
+	    // sets state, triggers render method
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      var str = event.target.value;
+	      // grab value form input box
+	      this.setState({ searchString: str });
 
-				if (this.state.display === 'hide' && str.length > 0) {
-					this.setState({
-						display: 'show',
-						listIndexSel: 0
-					});
-				} else {
-					if (str.length === 0) {
-						this.setState({ display: 'hide' });
-					}
-				}
-			}
+	      if (this.state.display === 'hide' && str.length > 0) {
+	        this.setState({
+	          display: 'show',
+	          listIndexSel: 0
+	        });
+	      } else {
+	        if (str.length === 0) {
+	          this.setState({ display: 'hide' });
+	        }
+	      }
+	    }
 
-			// Event to select a search item
-		}, {
-			key: 'handleSelect',
-			value: function handleSelect(name, value) {
-				// Will set the search item and close the list
-				return (function (event) {
-					// Add value
-					var selected = this.state.selectedItems;
-					selected.push({ 'name': name.toLowerCase(), 'id': value });
+	    // Event to select a search item
+	  }, {
+	    key: 'handleSelect',
+	    value: function handleSelect(name, value) {
+	      // Will set the search item and close the list
+	      return (function (event) {
+	        // Add value
+	        var selected = this.state.selectedItems;
+	        selected.push({ 'name': name.toLowerCase(), 'id': value });
 
-					// Update date
-					this.setState({
-						searchString: '',
-						display: 'hide',
-						value: _underscore2['default'].pluck(selected, 'id').toString(),
-						selectedItems: selected
-					});
+	        // Update date
+	        this.setState({
+	          searchString: '',
+	          display: 'hide',
+	          value: _underscore2['default'].pluck(selected, 'id'),
+	          selectedItems: selected
+	        });
 
-					// Check if we have a callback function to run
-					if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-						this.props.changeCallback(value, this.props.name);
-					}
+	        // Check if we have a callback function to run
+	        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+	          this.props.changeCallback(value, this.props.name);
+	        }
 
-					// Return focus to the input
-					_reactDom2['default'].findDOMNode(this.refs.tokenInput).focus();
-				}).bind(this); // bind to component
-			}
+	        // Return focus to the input
+	        _reactDom2['default'].findDOMNode(this.refs.tokenInput).focus();
+	      }).bind(this); // bind to component
+	    }
 
-			// Handles removal of tokens
-		}, {
-			key: 'handleDeleteToken',
-			value: function handleDeleteToken(id) {
-				return (function (event) {
-					// Remove value
-					var selected = this.state.selectedItems.filter(function (x) {
-						return x.id !== id;
-					});
-					var value = _underscore2['default'].pluck(selected, 'id').toString();
+	    // Handles removal of tokens
+	  }, {
+	    key: 'handleDeleteToken',
+	    value: function handleDeleteToken(id) {
+	      return (function (event) {
+	        // Remove value
+	        var selected = this.state.selectedItems.filter(function (x) {
+	          return x.id !== id;
+	        });
+	        var value = _underscore2['default'].pluck(selected, 'id');
 
-					// Update state
-					this.setState({
-						'selectedItems': selected,
-						'value': value
-					});
+	        // Update state
+	        this.setState({
+	          'selectedItems': selected,
+	          'value': value
+	        });
 
-					// Check if we have a callback function to run
-					if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-						this.props.changeCallback(value, this.props.name);
-					}
-				}).bind(this);
-			}
+	        // Check if we have a callback function to run
+	        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+	          this.props.changeCallback(value, this.props.name);
+	        }
+	      }).bind(this);
+	    }
 
-			// Key handler
-		}, {
-			key: 'handleKeyEvent',
-			value: function handleKeyEvent(event) {
-				if (event.key == 'ArrowDown') {
-					// Key Down - move selector down, if not bottom
-					if (this.state.listIndexSel < this.getSearchList().length - this.state.selectedItems.length - 1) {
-						this.setState({
-							'listIndexSel': this.state.listIndexSel + 1
-						});
-					}
-				} else if (event.key == 'ArrowUp') {
-					// Key Up - move selector up, if not to
-					if (this.state.listIndexSel > 0) {
-						this.setState({
-							'listIndexSel': this.state.listIndexSel - 1
-						});
-					}
-				} else if (event.key == 'Enter') {
-					// Enter - select item
-					var list = this.getSearchList();
-					var item = list[this.state.listIndexSel];
-					var name = item[this.props.mapValue];
-					var value = item[this.props.mapKey];
-					// Add value
-					var selected = this.state.selectedItems;
-					selected.push({ 'name': name.toLowerCase(), 'id': value });
+	    // Key handler
+	  }, {
+	    key: 'handleKeyEvent',
+	    value: function handleKeyEvent(event) {
+	      if (event.key == 'ArrowDown') {
+	        // Key Down - move selector down, if not bottom
+	        if (this.state.listIndexSel < this.getSearchList().length - this.state.selectedItems.length - 1) {
+	          this.setState({
+	            'listIndexSel': this.state.listIndexSel + 1
+	          });
+	        }
+	      } else if (event.key == 'ArrowUp') {
+	        // Key Up - move selector up, if not to
+	        if (this.state.listIndexSel > 0) {
+	          this.setState({
+	            'listIndexSel': this.state.listIndexSel - 1
+	          });
+	        }
+	      } else if (event.key == 'Enter') {
+	        // Enter - select item
+	        var selected = this.state.selectedItems;
 
-					// Update date
-					this.setState({
-						searchString: '',
-						display: 'hide',
-						value: _underscore2['default'].pluck(selected, 'id').toString(),
-						selectedItems: selected
-					});
+	        var list = this.getSearchList();
+	        if (list.length > 0) {
+	          // Make sure we got a list to select from
+	          var item = list[this.state.listIndexSel];
+	          var name = item[this.props.mapValue];
+	          var value = item[this.props.mapKey];
+	          selected.push({ 'name': name.toLowerCase(), 'id': value });
+	        } else if (this.props.canAdd === true) {
+	          // Value dosen't exists and we can add values
+	          var elem = typeof event.selectedIndex === "undefined" ? event.target : event;
+	          var value = elem.value || elem.options[elem.selectedIndex].value;
+	          selected.push({ 'name': value.toLowerCase(), 'id': value.toLowerCase() });
+	        } else {}
+	        // Hmm, here's nothing we can do.
 
-					// Check if we have a callback function to run
-					if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-						this.props.changeCallback(value, this.props.name);
-					}
-				} else if (event.key == 'Backspace') {
-					// Backspace - If no search string, remove token
-					if (this.state.searchString == '') {
-						// Remove last
-						this.state.selectedItems.pop();
+	        // Update date
+	        this.setState({
+	          searchString: '',
+	          display: 'hide',
+	          value: _underscore2['default'].pluck(selected, 'id'),
+	          selectedItems: selected
+	        });
 
-						// Update state
-						this.setState({
-							'selectedItems': this.state.selectedItems,
-							'value': _underscore2['default'].pluck(selected, 'id').toString()
-						});
+	        // Check if we have a callback function to run
+	        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+	          this.props.changeCallback(value, this.props.name);
+	        }
+	      } else if (event.key == 'Backspace') {
+	        // Backspace - If no search string, remove token
+	        if (this.state.searchString == '' && this.state.selectedItems.length > 0) {
+	          // Remove last
+	          var last = this.state.selectedItems.pop();
 
-						// Check if we have a callback function to run
-						if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-							this.props.changeCallback(value, this.props.name);
-						}
-					}
-				}
-			}
+	          if (typeof last.id === 'string') {
+	            // Update state
+	            this.setState({
+	              'searchString': last.name,
+	              'selectedItems': this.state.selectedItems,
+	              'value': _underscore2['default'].pluck(selected, 'id')
+	            });
+	          } else {
+	            // Update state
+	            this.setState({
+	              'selectedItems': this.state.selectedItems,
+	              'value': _underscore2['default'].pluck(selected, 'id')
+	            });
+	          }
 
-			// Dummy callback
-		}, {
-			key: 'handleStoreChange',
-			value: function handleStoreChange() {
-				this.loadData();
-			}
+	          // Check if we have a callback function to run
+	          if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+	            this.props.changeCallback(value, this.props.name);
+	          }
+	        }
+	      } else {
+	        // Unknown event-key
+	      }
+	    }
 
-			// Render function
-		}, {
-			key: 'render',
-			value: function render() {
-				var codes = this.getSearchList();
-				var searchString = this.state.searchString.trim().toLowerCase();
-				var value = this.state.value;
-				var selected = this.state.selectedItems;
+	    // Dummy callback
+	  }, {
+	    key: 'handleStoreChange',
+	    value: function handleStoreChange() {
+	      this.loadData();
+	    }
 
-				return _react2['default'].createElement(
-					'div',
-					{
-						className: 'token-search form-group',
-						onKeyUp: this.handleKeyEvent },
-					_react2['default'].createElement(
-						'label',
-						{ htmlFor: 'retts', className: 'col-sm-2 control-label' },
-						this.props.nameDisplay
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'input-area col-sm-6' },
-						selected.map((function (item) {
-							return _react2['default'].createElement(
-								'div',
-								{
-									key: item.id,
-									className: 'token' },
-								_react2['default'].createElement(
-									'div',
-									{ className: 'token-name' },
-									item.name
-								),
-								_react2['default'].createElement(
-									'div',
-									{
-										className: 'token-close',
-										onClick: this.handleDeleteToken(item.id) },
-									'x'
-								)
-							);
-						}).bind(this)),
-						_react2['default'].createElement('input', {
-							type: 'text',
-							ref: 'tokenInput',
-							className: 'token-input',
-							value: searchString,
-							onChange: this.handleChange,
-							disabled: this.props.singleValue && selected.length > 0,
-							placeholder: 'Search' }),
-						_react2['default'].createElement('input', {
-							type: 'hidden',
-							name: this.props.name,
-							value: value })
-					),
-					_react2['default'].createElement(
-						'div',
-						{
-							className: this.state.display + " list-area list-group col-sm-6",
-							ref: 'filteredList' },
-						codes.map((function (code, index) {
-							return _react2['default'].createElement(
-								'div',
-								{
-									key: code.id,
-									className: "list-group-item clickable" + (index == this.state.listIndexSel ? ' selected' : ''),
-									value: code[this.props.mapKey],
-									onClick: this.handleSelect(code[this.props.mapValue], code[this.props.mapKey]) },
-								_react2['default'].createElement(
-									'span',
-									{ className: 'badge' },
-									code[this.props.mapBadge]
-								),
-								code[this.props.mapValue]
-							);
-						}).bind(this))
-					)
-				);
-			}
-		}]);
+	    // Render function
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var codes = this.getSearchList();
+	      var searchString = this.state.searchString.trim().toLowerCase();
+	      var value = this.state.value;
+	      var selected = this.state.selectedItems;
 
-		return TokenSearch;
+	      return _react2['default'].createElement(
+	        'div',
+	        {
+	          className: 'token-search form-group',
+	          onKeyUp: this.handleKeyEvent },
+	        _react2['default'].createElement(
+	          'label',
+	          { htmlFor: 'retts', className: 'col-sm-2 control-label' },
+	          this.props.nameDisplay
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'input-area col-sm-6' },
+	          selected.map((function (item) {
+	            return _react2['default'].createElement(
+	              'div',
+	              {
+	                key: item.id,
+	                className: 'token' },
+	              _react2['default'].createElement(
+	                'div',
+	                { className: 'token-name' },
+	                item.name
+	              ),
+	              _react2['default'].createElement(
+	                'div',
+	                {
+	                  className: 'token-close',
+	                  onClick: this.handleDeleteToken(item.id) },
+	                'x'
+	              )
+	            );
+	          }).bind(this)),
+	          _react2['default'].createElement('input', {
+	            type: 'text',
+	            ref: 'tokenInput',
+	            className: 'token-input',
+	            value: searchString,
+	            onChange: this.handleChange,
+	            disabled: this.props.singleValue && selected.length > 0,
+	            placeholder: 'Search' }),
+	          _react2['default'].createElement('input', {
+	            type: 'hidden',
+	            name: this.props.name,
+	            value: value })
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          {
+	            className: this.state.display + " list-area list-group col-sm-6",
+	            ref: 'filteredList' },
+	          codes.map((function (code, index) {
+	            return _react2['default'].createElement(
+	              'div',
+	              {
+	                key: code.id,
+	                className: "list-group-item clickable" + (index == this.state.listIndexSel ? ' selected' : ''),
+	                value: code[this.props.mapKey],
+	                onClick: this.handleSelect(code[this.props.mapValue], code[this.props.mapKey]) },
+	              _react2['default'].createElement(
+	                'span',
+	                { className: 'badge' },
+	                code[this.props.mapBadge]
+	              ),
+	              code[this.props.mapValue]
+	            );
+	          }).bind(this))
+	        )
+	      );
+	    }
+	  }]);
+
+	  return TokenSearch;
 	})(_react.Component);
 
 	exports['default'] = TokenSearch;
 
 	TokenSearch.defaultProps = {
-		mapValue: 'name',
-		mapBadge: '',
-		mapKey: 'id',
-		name: 'dynamic-search',
-		nameDisplay: 'Search',
-		singleValue: false,
-		filterKey: '',
-		filterValue: '',
-		url: '',
-		changeCallback: false
+	  mapValue: 'name',
+	  mapBadge: '',
+	  mapKey: 'id',
+	  name: 'dynamic-search',
+	  nameDisplay: 'Search',
+	  singleValue: false,
+	  filterKey: '',
+	  filterValue: '',
+	  canAdd: false,
+	  url: '',
+	  changeCallback: false
 	};
 	module.exports = exports['default'];
 
@@ -24422,6 +24450,16 @@
 								' Nej'
 							)
 						)
+					),
+					_react2['default'].createElement(
+						'div',
+						{ className: 'form-group' },
+						_react2['default'].createElement(_tokenSearchJs2['default'], {
+							url: 'tags',
+							name: 'tags',
+							nameDisplay: 'Taggar',
+							singleValue: false,
+							canAdd: true })
 					),
 					_react2['default'].createElement(
 						'div',
