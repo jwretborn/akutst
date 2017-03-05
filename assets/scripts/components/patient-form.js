@@ -84,74 +84,81 @@ export default class PatientForm extends Component {
 	render() {
 		return (
 			<div onKeyDown={this.handleKeyEvent}>
-				<div className="form-group">
-					<label htmlFor="id" className="col-sm-2 control-label">Användare</label>
-					<div className="col-sm-4">
-						<input
-							type 		=	"text"
-							className 	=	"form-control"
-							name 		=	"user_id"
-							value		=	{ this.state.user_id }
-							onChange	=	{ this.handleFieldChange('user_id') } />
-					</div>
-				</div>
-				<div className="form-group">
-					<label htmlFor="date" className="col-sm-2 control-label">Datum</label>
-					<div className="col-sm-4">
-						<input
-							type 		= 	"date"
-							className 	=	"form-control"
-							name 		= 	"date"
-							defaultValue=	{ this.state.date }
-							onBlur 		=	{ this.handleFieldChange('date') } />
-					</div>
-				</div>
-				<div className="form-group">
-					<InputSelect
-						url			=	{ 'group/colours/items' }
-						label 		= 	{ 'Prioritet' }
-						name 		=	{ 'prio' }
-						onUpdate	=	{ this.handleSelectChange } />
-				</div>
-				<div className="form-group">
-					<InputSelect
-						url 	 	=	{ 'group/ages/items' }
-						label 		=	{ 'Ålder' }
-						name 	 	= 	{ 'age' }
-						onUpdate 	=	{ this.handleSelectChange } />
-				</div>
-				<div className="form-group">
-					<TokenSearch
-						url 		= 	{ 'codes' }
-						mapBadge 	=	{ 'type' }
-						name 		=	{ 'retts' }
-						nameDisplay =	{ 'Sökorsak' }
-						singleValue =	{ true }
-						filterKey 	=	{ 'type' }
-						filterValue =	{ this.state.searchFilter } />
-				</div>
-				<div className="form-group">
-					<label htmlFor="admittance" className="col-sm-2 control-label">Inläggning</label>
-					<div className="col-sm-4">
-					    <label className="radio-inline">
-					        <input type="radio" name="admittance" id="admittancelRadio1" value="1" /> Ja
-					    </label>
-					    <label className="radio-inline">
-					        <input type="radio" name="admittance" id="admittancelRadio2" value="" /> Nej
-					    </label>
-					</div>
-				</div>
-				<div className="form-group">
-					<label htmlFor="tuition" className="col-sm-2 control-label">Handledning</label>
-					<div className="col-sm-4">
-						<label className="radio-inline">
-							<input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
-						</label>
-						<label className="radio-inline">
-							<input type="radio" name="tuition" id="tuitionlRadio2" value="" /> Nej
-						</label>
-					</div>
-				</div>
+        <div className="form-group">
+          <label htmlFor="id" className="col-sm-2 control-label">Användare</label>
+          <div className="col-sm-4">
+            <input
+              type 		=	"text"
+              className 	=	"form-control"
+              name 		=	"user_id"
+              value		=	{ this.state.user_id }
+              onChange	=	{ this.handleFieldChange('user_id') } />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="date" className="col-sm-2 control-label">Datum</label>
+          <div className="col-sm-4">
+            <input
+              type 		= 	"date"
+              className 	=	"form-control"
+              name 		= 	"date"
+              defaultValue=	{ this.state.date }
+              onBlur 		=	{ this.handleFieldChange('date') } />
+          </div>
+        </div>
+        <div className="form-group">
+          <InputSelect
+            url			=	{ 'group/colours/items' }
+            label 		= 	{ 'Prioritet' }
+            name 		=	{ 'prio' }
+            onUpdate	=	{ this.handleSelectChange } />
+        </div>
+        <div className="form-group">
+          <InputSelect
+            url 	 	=	{ 'group/ages/items' }
+            label 		=	{ 'Ålder' }
+            name 	 	= 	{ 'age' }
+            onUpdate 	=	{ this.handleSelectChange } />
+        </div>
+        <div className="form-group">
+          <TokenSearch
+            url 		= 	{ 'codes' }
+            mapBadge 	=	{ 'type' }
+            name 		=	{ 'retts' }
+            nameDisplay =	{ 'Sökorsak' }
+            singleValue =	{ true }
+            filterKey 	=	{ 'type' }
+            filterValue =	{ this.state.searchFilter } />
+        </div>
+        <div className="form-group">
+          <label htmlFor="admittance" className="col-sm-2 control-label">Inläggning</label>
+          <div className="col-sm-4">
+            <label className="radio-inline">
+              <input type="radio" name="admittance" id="admittancelRadio1" value="1" /> Ja
+            </label>
+            <label className="radio-inline">
+              <input type="radio" name="admittance" id="admittancelRadio2" value="" /> Nej
+            </label>
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="tuition" className="col-sm-2 control-label">Handledning</label>
+          <div className="col-sm-4">
+            <label className="radio-inline">
+              <input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
+            </label>
+            <label className="radio-inline">
+              <input type="radio" name="tuition" id="tuitionlRadio2" value="" /> Nej
+            </label>
+          </div>
+        </div>
+        <div className="form-group">
+          <TokenSearch
+            url =       { 'tags' }
+            name =      { 'tags' }
+            nameDisplay = { 'Taggar' }
+            singleValue = { false } />
+        </div>
 				<div className="form-group">
 					<label htmlFor="comments" className="col-sm-2 control-label">Kommentar</label>
 					<div className="col-sm-4">

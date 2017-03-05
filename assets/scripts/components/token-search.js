@@ -5,26 +5,26 @@ import _ from 'underscore';
 
 export default class TokenSearch extends Component {
 
-	// Constructor
-	constructor(props) {
-		super(props);
-		this.state = {
-			searchString	: '',
-			display			: 'hide',
-			listItems		: [],
-			value 			: '',
-            selectedItems   : [],
-            listIndexSel    : 0
-		};
+  // Constructor
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchString	: '',
+      display			: 'hide',
+      listItems		: [],
+      value 			: '',
+        selectedItems   : [],
+        listIndexSel    : 0
+    };
 
-        // Bind functions
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSelect = this.handleSelect.bind(this);
-        this.handleDeleteToken = this.handleDeleteToken.bind(this);
-        this.handleKeyEvent = this.handleKeyEvent.bind(this);
-		this.handleStoreChange = this.handleStoreChange.bind(this);
-		this.applyFilter = this.applyFilter.bind(this);
-        this.getSearchList = this.getSearchList.bind(this);
+    // Bind functions
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleDeleteToken = this.handleDeleteToken.bind(this);
+    this.handleKeyEvent = this.handleKeyEvent.bind(this);
+    this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.applyFilter = this.applyFilter.bind(this);
+    this.getSearchList = this.getSearchList.bind(this);
 	}
 
 	// Do initial loading
@@ -49,46 +49,43 @@ export default class TokenSearch extends Component {
 		}
 	}
 
-    // Filter items based on the props filter key and on already selected items
-	applyFilter(items) {
-		if (this.props.filterKey !== '') {
-			items = items.filter(function(item){
-                // Check pre-specified filter-key
-                if (item[this.props.filterKey] == null) {
-					if (this.props.filterValue === '') {
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
+  // Filter items based on the props filter key and on already selected items
+  applyFilter(items) {
+    items = items.filter(function(item){
+      if (this.props.filterKey !== '') {
+        // Check pre-specified filter-key
+        if (item[this.props.filterKey] == null) {
+          if (this.props.filterValue === '') {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+        // Check for match of the search-string
+        return item[this.props.filterKey].toLowerCase().match(this.props.filterValue);
+      }
 
-                // Remove selected values
-                var selected = this.state.selectedItems;
-                if (_.contains(_.pluck(selected, 'name'), item['name'].toLowerCase()) === true) {
-                    return false;
-                }
+      // Remove selected values
+      return ! _.contains(_.pluck(this.state.selectedItems, this.props.mapValue), item[this.props.mapValue].toLowerCase());
+    }.bind(this));
 
-                // Check for match of the search-string
-				return item[this.props.filterKey].toLowerCase().match(this.props.filterValue);
-			}.bind(this));
-		}
-		return items;
-	}
+    return items;
+  }
 
-    getSearchList(items) {
-        var codes = this.applyFilter(this.state.listItems);
-		var searchString = this.state.searchString.trim().toLowerCase();
+  getSearchList(items) {
+    var codes = this.applyFilter(this.state.listItems);
+    var searchString = this.state.searchString.trim().toLowerCase();
 
-        // filter items list by value from input box
-		if(searchString.length > 0){
-			codes = codes.filter(function(codes){
-				return codes[this.props.mapValue].toLowerCase().match( searchString );
-			}.bind(this));	// bind to component
-		}
-
-        return codes;
+    // filter items list by value from input box
+    if(searchString.length > 0){
+      codes = codes.filter(function(codes){
+        return codes[this.props.mapValue].toLowerCase().match( searchString );
+      }.bind(this));	// bind to component
     }
+
+    return codes;
+  }
 
 	// sets state, triggers render method
 	handleChange(event) {
@@ -113,25 +110,26 @@ export default class TokenSearch extends Component {
 	handleSelect(name, value) {
 		// Will set the search item and close the list
 		return function(event) {
-            // Add value
-            var selected = this.state.selectedItems;
-            selected.push({'name' : name.toLowerCase(), 'id' : value});
+      // Add value
+      var selected = this.state.selectedItems;
+      selected.push({'name' : name.toLowerCase(), 'id' : value});
 
             // Update date
 			this.setState({
 				searchString	: '',
 				display			: 'hide',
-				value 			: _.pluck(selected, 'id').toString(),
-                selectedItems   : selected
+				value 			: _.pluck(selected, 'id'),
+        selectedItems   : selected
 			});
+      console.log(_.pluck(selected, 'id'));
 
-            // Check if we have a callback function to run
+      // Check if we have a callback function to run
 			if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
 				this.props.changeCallback(value, this.props.name);
 			}
 
-            // Return focus to the input
-            ReactDOM.findDOMNode(this.refs.tokenInput).focus();
+      // Return focus to the input
+      ReactDOM.findDOMNode(this.refs.tokenInput).focus();
 		}.bind(this); // bind to component
 	}
 
@@ -140,7 +138,7 @@ export default class TokenSearch extends Component {
         return function(event) {
             // Remove value
             var selected = this.state.selectedItems.filter((x) => x.id !== id);
-			var value = _.pluck(selected, 'id').toString();
+			      var value = _.pluck(selected, 'id');
 
             // Update state
             this.setState({
@@ -187,9 +185,11 @@ export default class TokenSearch extends Component {
 			this.setState({
 				searchString	: '',
 				display			: 'hide',
-				value 			: _.pluck(selected, 'id').toString(),
-                selectedItems   : selected
+				value 			: _.pluck(selected, 'id'),
+        selectedItems   : selected
 			});
+      console.log(_.pluck(selected, 'id'));
+
 
             // Check if we have a callback function to run
 			if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
@@ -205,7 +205,7 @@ export default class TokenSearch extends Component {
                 // Update state
                 this.setState({
                     'selectedItems' : this.state.selectedItems,
-                    'value' : _.pluck(selected, 'id').toString()
+                    'value' : _.pluck(selected, 'id')
                 });
 
                 // Check if we have a callback function to run
@@ -226,7 +226,7 @@ export default class TokenSearch extends Component {
 		var codes = this.getSearchList();
 		var searchString = this.state.searchString.trim().toLowerCase();
 		var value = this.state.value;
-        var selected = this.state.selectedItems;
+    var selected = this.state.selectedItems;
 
 		return (
 			<div
