@@ -104,10 +104,12 @@ def patients():
                     tag_id = int(tag)
                     t = db.session.query(Tag).filter(Tag.id == tag_id).first()
                 except ValueError :
-                    t = Tag(
-                        name=tag
-                    )
-                    db.session.add(t)
+                    t = db.session.query(Tag).filter(Tag.name==tag).first()
+                    if t is None :
+                        t = Tag(
+                            name=tag
+                        )
+                        db.session.add(t)
 
                 if t is not None :
                     p.tags.append(t)

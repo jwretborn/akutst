@@ -176,22 +176,20 @@ export default class TokenSearch extends Component {
 
         var list = this.getSearchList();
         if (list.length > 0) {
+          // Make sure we got a list to select from
           var item = list[this.state.listIndexSel];
           var name = item[this.props.mapValue];
           var value = item[this.props.mapKey];
-          // Add value
           selected.push({'name' : name.toLowerCase(), 'id' : value});
         }
         else if (this.props.canAdd === true) {
-          // add value
+          // Value dosen't exists and we can add values
           var elem = (typeof event.selectedIndex === "undefined" ? event.target : event);
           var value = elem.value || elem.options[elem.selectedIndex].value;
-          console.log('add value');
           selected.push({'name' : value.toLowerCase(), 'id' : value.toLowerCase()});
         }
         else {
-          // error
-          console.log('hepp');
+          // Hmm, here's nothing we can do.
         }
 
         // Update date
@@ -210,23 +208,36 @@ export default class TokenSearch extends Component {
       }
       else if (event.key == 'Backspace') {
         // Backspace - If no search string, remove token
-        if (this.state.searchString == '') {
-        // Remove last
-        this.state.selectedItems.pop();
+        if (this.state.searchString == '' && this.state.selectedItems.length > 0) {
+          // Remove last
+          var last = this.state.selectedItems.pop();
 
-        // Update state
-        this.setState({
-          'selectedItems' : this.state.selectedItems,
-          'value' : _.pluck(selected, 'id')
-        });
+          if (typeof last.id === 'string') {
+            // Update state
+            this.setState({
+              'searchString' : last.name,
+              'selectedItems' : this.state.selectedItems,
+              'value' : _.pluck(selected, 'id')
+            });
+          }
+          else {
+            // Update state
+            this.setState({
+              'selectedItems' : this.state.selectedItems,
+              'value' : _.pluck(selected, 'id')
+            });
+          }
 
-        // Check if we have a callback function to run
-        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-          this.props.changeCallback(value, this.props.name);
+          // Check if we have a callback function to run
+          if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+            this.props.changeCallback(value, this.props.name);
+          }
         }
       }
+      else {
+        // Unknown event-key
+      }
     }
-  }
 
     // Dummy callback
 	handleStoreChange() {
