@@ -88,78 +88,85 @@ export default class ProcedureForm extends Component {
 
 		return (
 			<div onKeyDown={this.handleKeyEvent}>
-				<div className={ this.props.hidePrefilled === true && this.props.userId !== false ? divGrpCls+" hide" : divGrpCls }>
-					<label htmlFor="id" className={ labelCls }>Användare</label>
-					<div className={ divColCls }>
-						<input
-							type 		= "user_id"
-							className 	= "form-control"
-							name 		= "user_id"
-						defaultValue= { this.props.userId !== false ? this.props.userId : '' } />
-					</div>
-				</div>
-				<div className={ this.props.hidePrefilled === true && this.props.date !== false ? divGrpCls+" hide" : divGrpCls }>
-					<label htmlFor="date" className={ labelCls }>Datum</label>
-					<div className={ divColCls }>
-						<input
-							type 		= "date"
-							className 	= "form-control"
-							name 		= "date"
-						defaultValue= { this.state.date } />
-					</div>
-				</div>
-				<div className="form-group">
-					<TokenSearch
-						url 		= 	{ 'proceduretype' }
-						name 		=	{ 'procedure' }
-						nameDisplay =	{ 'Procedur' }
-						singleValue =	{ true }
-						changeCallback ={ this.handleProcedureChange }/>
-				</div>
-				{ this.state.procedure !== false && this.state.procedure.method_group !== null &&
-					(
-						<div className="form-group method">
-							<InputSelect
-								url			=	{ 'group/'+this.state.procedure.method_group+'/items' }
-								name 		=	{ 'method' }
-								label 		=	{ 'Metod' }
-								onUpdate 	=	{ this.handleSelectChange } />
-						</div>
-					)
-				}
-				{ this.state.procedure !== false && this.state.procedure.anatomy_group !== null &&
-					(
-						<div className={ divGrpCls }>
-							<InputSelect
-								url			=	{ 'group/'+this.state.procedure.anatomy_group+'/items' }
-								name 		= 	{ 'anatomy' }
-								label 		= 	{ 'Lokal' }
-								onUpdate	= 	{ this.handleSelectChange } />
-						</div>
-					)
-				}
-				<div className={ divGrpCls }>
-					<label htmlFor="successful" className={ labelCls }>Framgångsrik</label>
-					<div className="col-sm-10">
-						<label className="radio-inline">
-							<input type="radio" name="successful" id="successfullRadio1" value="1" /> Ja
-						</label>
-						<label className="radio-inline">
-							<input type="radio" name="successful" id="successfullRadio2" value="" /> Nej
-						</label>
-					</div>
-				</div>
-				<div className={ divGrpCls }>
-					<label htmlFor="tuition" className={ labelCls }>Handledning</label>
-					<div className="col-sm-10">
-						<label className="radio-inline">
-							<input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
-						</label>
-						<label className="radio-inline">
-							<input type="radio" name="tuition" id="tuitionlRadio2" value="" /> Nej
-						</label>
-					</div>
-				</div>
+        <div className={ this.props.hidePrefilled === true && this.props.userId !== false ? divGrpCls+" hide" : divGrpCls }>
+          <label htmlFor="id" className={ labelCls }>Användare</label>
+          <div className={ divColCls }>
+            <input
+              type 		= "user_id"
+              className 	= "form-control"
+              name 		= "user_id"
+              defaultValue= { this.props.userId !== false ? this.props.userId : '' } />
+          </div>
+        </div>
+        <div className={ this.props.hidePrefilled === true && this.props.date !== false ? divGrpCls+" hide" : divGrpCls }>
+          <label htmlFor="date" className={ labelCls }>Datum</label>
+          <div className={ divColCls }>
+            <input
+              type 		= "date"
+              className 	= "form-control"
+              name 		= "date"
+              defaultValue= { this.state.date } />
+          </div>
+        </div>
+        <div className="form-group">
+          <TokenSearch
+            url 		= 	{ 'proceduretype' }
+            name 		=	{ 'procedure' }
+            nameDisplay =	{ 'Procedur' }
+            singleValue =	{ true }
+            changeCallback ={ this.handleProcedureChange }/>
+        </div>
+        { this.state.procedure !== false && this.state.procedure.method_group !== null &&
+        (
+        <div className="form-group method">
+          <InputSelect
+            url			=	{ 'group/'+this.state.procedure.method_group+'/items' }
+            name 		=	{ 'method' }
+            label 		=	{ 'Metod' }
+            onUpdate 	=	{ this.handleSelectChange } />
+        </div>
+        )
+        }
+        { this.state.procedure !== false && this.state.procedure.anatomy_group !== null &&
+        (
+        <div className={ divGrpCls }>
+          <InputSelect
+            url			=	{ 'group/'+this.state.procedure.anatomy_group+'/items' }
+            name 		= 	{ 'anatomy' }
+            label 		= 	{ 'Lokal' }
+            onUpdate	= 	{ this.handleSelectChange } />
+        </div>
+        )
+        }
+        <div className={ divGrpCls }>
+          <label htmlFor="successful" className={ labelCls }>Framgångsrik</label>
+          <div className="col-sm-10">
+            <label className="radio-inline">
+              <input type="radio" name="successful" id="successfullRadio1" value="1" /> Ja
+            </label>
+            <label className="radio-inline">
+              <input type="radio" name="successful" id="successfullRadio2" value="" /> Nej
+            </label>
+          </div>
+        </div>
+        <div className={ divGrpCls }>
+          <label htmlFor="tuition" className={ labelCls }>Handledning</label>
+          <div className="col-sm-10">
+            <label className="radio-inline">
+              <input type="radio" name="tuition" id="tuitionlRadio1" value="1" /> Ja
+            </label>
+            <label className="radio-inline">
+              <input type="radio" name="tuition" id="tuitionlRadio2" value="" /> Nej
+            </label>
+          </div>
+        </div>
+        <div className="form-group">
+          <TokenSearch
+            url =       { 'tags' }
+            name =      { 'tags' }
+            nameDisplay = { 'Taggar' }
+            singleValue = { false } />
+        </div>
 				<div className={ divGrpCls }>
 					<label htmlFor="comments" className={ labelCls }>Kommentar</label>
 					<div className={ divColCls }>

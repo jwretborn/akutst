@@ -4,14 +4,15 @@ from flask_security.forms import RegisterForm
 
 '''Form class for procedures'''
 class ProcedureForm(Form):
-	user_id = TextField('ID', [validators.Length(min=2, max=32), validators.Required()])
-	procedure = IntegerField('Procedur', [validators.Required()])
-	method = IntegerField('Metod')
-	anatomy = IntegerField('Lokal')
-	tuition = BooleanField('Handledning')
-	date = TextField('Datum', [validators.Length(min=10, max=10)])
-	successful = BooleanField('Proceduren lyckades')
-	comments = TextField('Kommentar', [validators.Length(max=400)])
+    user_id = TextField('ID', [validators.Length(min=2, max=32), validators.Required()])
+    procedure = IntegerField('Procedur', [validators.Required()])
+    method = IntegerField('Metod')
+    anatomy = IntegerField('Lokal')
+    tuition = BooleanField('Handledning')
+    date = TextField('Datum', [validators.Length(min=10, max=10)])
+    successful = BooleanField('Proceduren lyckades')
+    comments = TextField('Kommentar', [validators.Length(max=400)])
+    tags = StringField('Taggar')
 
 '''Form class for patientes'''
 class PatientForm(Form):

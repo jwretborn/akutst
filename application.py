@@ -127,37 +127,54 @@ def patients():
 @app.route('/procedurer', methods=['GET', 'POST'])
 @app.route('/procedurer/<id>', methods=['GET', 'POST'])
 def procedure(id=False):
-	procedure_type = False
-	form = ProcedureForm(request.form)
-	if request.method == 'POST' and form.validate():
-		try :
-			## Fetch user
-			username = form.user_id.data
-			user = db.session.query(User).filter(User.username == username).first()
+    procedure_type = False
+    form = ProcedureForm(request.form)
+    if request.method == 'POST' and form.validate():
+        try :
+            ## Fetch user
+            username = form.user_id.data
+            user = db.session.query(User).filter(User.username == username).first()
 
-			if user is None:
-				raise ValueError(u'ID existerar inte')
+            if user is None:
+                raise ValueError(u'ID existerar inte')
 
-			p = Procedure(
-				user_id=user.id,
-				type=form.procedure.data,
-				method=form.method.data,
-				anatomy=form.anatomy.data,
-				tuition=form.tuition.data,
-				created=form.date.data,
-				successful=form.successful.data,
-				comments=form.comments.data
-			)
-			db.session.add(p)
-			db.session.commit()
+            p = Procedure(
+                user_id=user.id,
+                type=form.procedure.data,
+                method=form.method.data,
+                anatomy=form.anatomy.data,
+                tuition=form.tuition.data,
+                created=form.date.data,
+                successful=form.successful.data,
+                comments=form.comments.data
+            )
 
-			flash(u'Proceduren sparad', 'success')
-		except ValueError as err:
-			flash(err, 'warning')
-	else :
-		flash_form_errors(form)
+            ## Split tag data
+            form.tags.data = form.tags.data.split(',')
+            for tag in form.tags.data :
+                ## Check if we have an integer
+                try :
+                    tag_id = int(tag)
+                    t = db.session.query(Tag).filter(Tag.id == tag).first()
+                except ValueError :
+                    t = Tag(
+                        name = tag_id
+                    )
+                    db.session.add(t)
 
-	return render_template('procedure.html')
+                if t is not None :
+                    p.tags.append(t)
+
+            db.session.add(p)
+            db.session.commit()
+
+            flash(u'Proceduren sparad', 'success')
+        except ValueError as err:
+            flash(err, 'warning')
+    else :
+        flash_form_errors(form)
+
+    return render_template('procedure.html')
 
 @app.route('/diagnostic', methods=['GET', 'POST'])
 def diagnostic():
