@@ -157,7 +157,8 @@ export default class PatientForm extends Component {
             url =       { 'tags' }
             name =      { 'tags' }
             nameDisplay = { 'Taggar' }
-            singleValue = { false } />
+            singleValue = { false }
+            canAdd      = { true } />
         </div>
 				<div className="form-group">
 					<label htmlFor="comments" className="col-sm-2 control-label">Kommentar</label>

@@ -121,7 +121,6 @@ export default class TokenSearch extends Component {
 				value 			: _.pluck(selected, 'id'),
         selectedItems   : selected
 			});
-      console.log(_.pluck(selected, 'id'));
 
       // Check if we have a callback function to run
 			if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
@@ -135,86 +134,99 @@ export default class TokenSearch extends Component {
 
     // Handles removal of tokens
     handleDeleteToken(id) {
-        return function(event) {
-            // Remove value
-            var selected = this.state.selectedItems.filter((x) => x.id !== id);
-			      var value = _.pluck(selected, 'id');
+      return function(event) {
+        // Remove value
+        var selected = this.state.selectedItems.filter((x) => x.id !== id);
+        var value = _.pluck(selected, 'id');
 
-            // Update state
-            this.setState({
-                'selectedItems' : selected,
-                'value' : value
-            });
+        // Update state
+        this.setState({
+          'selectedItems' : selected,
+          'value' : value
+        });
 
-            // Check if we have a callback function to run
-            if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-				this.props.changeCallback(value, this.props.name);
-			}
-        }.bind(this);
+        // Check if we have a callback function to run
+        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+          this.props.changeCallback(value, this.props.name);
+        }
+      }.bind(this);
     }
 
     // Key handler
     handleKeyEvent(event) {
-        if (event.key == 'ArrowDown') {
-            // Key Down - move selector down, if not bottom
-            if (this.state.listIndexSel < (this.getSearchList().length - this.state.selectedItems.length - 1)) {
-                this.setState({
-                    'listIndexSel' : this.state.listIndexSel+1
-                });
-            }
+      if (event.key == 'ArrowDown') {
+          // Key Down - move selector down, if not bottom
+          if (this.state.listIndexSel < (this.getSearchList().length - this.state.selectedItems.length - 1)) {
+              this.setState({
+                  'listIndexSel' : this.state.listIndexSel+1
+              });
+          }
+      }
+      else if (event.key == 'ArrowUp') {
+        // Key Up - move selector up, if not to
+        if (this.state.listIndexSel > 0) {
+          this.setState({
+            'listIndexSel' : this.state.listIndexSel-1
+          });
         }
-        else if (event.key == 'ArrowUp') {
-            // Key Up - move selector up, if not to
-            if (this.state.listIndexSel > 0) {
-                this.setState({
-                    'listIndexSel' : this.state.listIndexSel-1
-                });
-            }
+      }
+      else if (event.key == 'Enter') {
+        // Enter - select item
+        var selected = this.state.selectedItems;
+
+        var list = this.getSearchList();
+        if (list.length > 0) {
+          var item = list[this.state.listIndexSel];
+          var name = item[this.props.mapValue];
+          var value = item[this.props.mapKey];
+          // Add value
+          selected.push({'name' : name.toLowerCase(), 'id' : value});
         }
-        else if (event.key == 'Enter') {
-            // Enter - select item
-            var list = this.getSearchList();
-            var item = list[this.state.listIndexSel];
-            var name = item[this.props.mapValue];
-            var value = item[this.props.mapKey];
-            // Add value
-            var selected = this.state.selectedItems;
-            selected.push({'name' : name.toLowerCase(), 'id' : value});
-
-            // Update date
-			this.setState({
-				searchString	: '',
-				display			: 'hide',
-				value 			: _.pluck(selected, 'id'),
-        selectedItems   : selected
-			});
-      console.log(_.pluck(selected, 'id'));
-
-
-            // Check if we have a callback function to run
-			if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-				this.props.changeCallback(value, this.props.name);
-			}
+        else if (this.props.canAdd === true) {
+          // add value
+          var elem = (typeof event.selectedIndex === "undefined" ? event.target : event);
+          var value = elem.value || elem.options[elem.selectedIndex].value;
+          console.log('add value');
+          selected.push({'name' : value.toLowerCase(), 'id' : value.toLowerCase()});
         }
-        else if (event.key == 'Backspace') {
-            // Backspace - If no search string, remove token
-            if (this.state.searchString == '') {
-                // Remove last
-                this.state.selectedItems.pop();
-
-                // Update state
-                this.setState({
-                    'selectedItems' : this.state.selectedItems,
-                    'value' : _.pluck(selected, 'id')
-                });
-
-                // Check if we have a callback function to run
-                if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
-    				this.props.changeCallback(value, this.props.name);
-    			}
-            }
+        else {
+          // error
+          console.log('hepp');
         }
+
+        // Update date
+        this.setState({
+          searchString	: '',
+          display			: 'hide',
+          value 			: _.pluck(selected, 'id'),
+          selectedItems : selected
+        });
+
+
+        // Check if we have a callback function to run
+        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+          this.props.changeCallback(value, this.props.name);
+        }
+      }
+      else if (event.key == 'Backspace') {
+        // Backspace - If no search string, remove token
+        if (this.state.searchString == '') {
+        // Remove last
+        this.state.selectedItems.pop();
+
+        // Update state
+        this.setState({
+          'selectedItems' : this.state.selectedItems,
+          'value' : _.pluck(selected, 'id')
+        });
+
+        // Check if we have a callback function to run
+        if (this.props.changeCallback !== false && typeof this.props.changeCallback == 'function') {
+          this.props.changeCallback(value, this.props.name);
+        }
+      }
     }
+  }
 
     // Dummy callback
 	handleStoreChange() {
@@ -292,6 +304,7 @@ TokenSearch.defaultProps = {
 	singleValue		: false,
 	filterKey		: '',
 	filterValue		: '',
+  canAdd        : false,
 	url				: '',
 	changeCallback	: false
 }

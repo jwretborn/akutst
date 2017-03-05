@@ -102,10 +102,10 @@ def patients():
                 ## Check if we have an integer
                 try :
                     tag_id = int(tag)
-                    t = db.session.query(Tag).filter(Tag.id == tag).first()
+                    t = db.session.query(Tag).filter(Tag.id == tag_id).first()
                 except ValueError :
                     t = Tag(
-                        name = tag_id
+                        name=tag
                     )
                     db.session.add(t)
 

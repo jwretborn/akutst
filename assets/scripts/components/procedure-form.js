@@ -165,7 +165,8 @@ export default class ProcedureForm extends Component {
             url =       { 'tags' }
             name =      { 'tags' }
             nameDisplay = { 'Taggar' }
-            singleValue = { false } />
+            singleValue = { false }
+            canAdd      = { true } />
         </div>
 				<div className={ divGrpCls }>
 					<label htmlFor="comments" className={ labelCls }>Kommentar</label>
