@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Om{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Om akutst.se</h1>
+    <p>
+      Akutst.se är en tjänst ämnad för läkare under utbildning som vill ha möjlighet att registrera patientbesök och procedurer som en del i sin utbildning. Tjänsten drivs i dagsläget helt idellt av Jens Wretborn och Johan Smedbäck.
+    </p>
+    <h2>Användande</h2>
+    <p>
+      I dagsläget kan vem som helst registrera sig som användare på akutst.se. När man registrerar sig så åtar man sig att använda tjänsten i enlighet med dess syfte och inte på något sätt försöka sabotera tjänsten eller komma åt information som man inte är behörig till.
+    </p>
+    <h2>Data</h2>
+    <p>
+      Grundregeln är att man som användare själva äger sin data och har när som helst rätt att plocka ut sin data från akutst.se. Alla data på akutst.se kan används för att utveckla tjänsten och i anonymiserad version användas för att ge dess användare mer information. Datan kan också komma att användas i forskningsprojekt. Datan kommer inte att användas i kommersiella syften eller ges ut till annat företag.
+    </p>
+{% endblock %}

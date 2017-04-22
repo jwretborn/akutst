@@ -69,9 +69,9 @@ admin.add_view(MyModelView(Role, db.session))
 def index():
 	return redirect(url_for('patients'))
 
-@app.route("/ultraljud")
+@app.route("/om")
 def ultrasound():
-	return render_template('diagnostics.html')
+	return render_template('about.html')
 
 @app.route("/patienter", methods=['GET', 'POST'])
 def patients():
@@ -98,22 +98,7 @@ def patients():
 
             ## Split tag data
             form.tags.data = form.tags.data.split(',')
-            for tag in form.tags.data :
-                ## Check if we have an integer
-                try :
-                    tag_id = int(tag)
-                    t = db.session.query(Tag).filter(Tag.id == tag_id).first()
-                except ValueError :
-                    t = db.session.query(Tag).filter(Tag.name==tag).first()
-                    if t is None :
-                        t = Tag(
-                            name=tag
-                        )
-                        db.session.add(t)
-
-                if t is not None :
-                    p.tags.append(t)
-
+            add_tags_to_model(form.tags.data, p)
 
             db.session.add(p)
             db.session.commit()
@@ -153,19 +138,7 @@ def procedure(id=False):
 
             ## Split tag data
             form.tags.data = form.tags.data.split(',')
-            for tag in form.tags.data :
-                ## Check if we have an integer
-                try :
-                    tag_id = int(tag)
-                    t = db.session.query(Tag).filter(Tag.id == tag).first()
-                except ValueError :
-                    t = Tag(
-                        name = tag_id
-                    )
-                    db.session.add(t)
-
-                if t is not None :
-                    p.tags.append(t)
+            add_tags_to_model(form.tags.data, p)
 
             db.session.add(p)
             db.session.commit()
@@ -283,6 +256,24 @@ def reset_database_seq(table):
     result = db.engine.execute("SELECT setval('%s_id_seq', (SELECT MAX(id) FROM %s)+1)" % (table, table))
     return jsonify("success")
 
+def add_tags_to_model(tag_data, model):
+    for tag in tag_data :
+        ## Check if we have an integer
+        try :
+            if isinstance(tag, int) :
+                t = db.session.query(Tag).filter(Tag.id == tag).first()
+            else :
+                t = db.session.query(Tag).filter(Tag.name==tag).first()
+                if t is None :
+                    t = Tag(
+                        name = tag
+                    )
+                    db.session.add(t)
+        except Exception as err :
+            flash(err, 'warning')
+
+        if t is not None :
+            model.tags.append(t)
 
 # ACME letsencrypt stuff via sabayon https://github.com/dmathieu/sabayon
 def find_key(token):

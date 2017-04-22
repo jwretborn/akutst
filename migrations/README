@@ -1,1 +1,14 @@
 Generic single-database configuration.
+
+
+Important ForeignKey stuff
+http://docs.sqlalchemy.org/en/latest/core/constraints.html#metadata-foreignkeys
+
+Alembic documentation
+http://alembic.zzzcomputing.com/en/latest/index.html
+
+We use Flask-migrate for the actual operations
+https://flask-migrate.readthedocs.io/en/latest/
+
+Many-to-Many - backref
+http://docs.sqlalchemy.org/en/latest/orm/backref.html#relationships-backref
